@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>กู้ภัยไฟฟ้าวิกฤต · กฎของโอห์ม ม.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06121d;--card:#10283a;--edge:#2f5068;--amber:#ffb938;--cyan:#5ce1f2;--red:#ff5a4f;--green:#7be0b0;--text:#f2f6f4;--muted:#a9c0cc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#eef4f7;--card:#fff;--edge:#b8ccd6;--amber:#c77d00;--cyan:#0a7f91;--red:#c62828;--green:#1b7a52;--text:#10222e;--muted:#4a6472}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]):not([data-theme="light"]){--bg:#eef4f7;--card:#fff;--edge:#b8ccd6;--amber:#c77d00;--cyan:#0a7f91;--red:#c62828;--green:#1b7a52;--text:#10222e;--muted:#4a6472}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Kanit,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.wrap{max-width:1500px;margin:auto;padding:14px}
+header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;border-bottom:1px solid var(--edge);padding-bottom:10px}
+h1{margin:0;font-size:clamp(1.3rem,3.5vw,2rem)}h1 span{color:var(--amber)}h2{margin:.2em 0}h3{margin:.2em 0;font-size:1.05rem}
+.eb{margin:0;color:var(--amber);font-weight:600;font-size:.8rem;letter-spacing:.08em}.mut{color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+button{font-family:inherit}
+.tab,.chip,.btn{border:1px solid var(--edge);background:var(--card);color:var(--text);border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.9rem}
+.tab.on,.chip.on{background:var(--amber);color:#1b1305;border-color:var(--amber)}
+.btn{border-radius:10px}.btn.main{background:var(--amber);color:#1b1305;border-color:var(--amber)}.btn.live{background:var(--red);color:#fff;border-color:var(--red)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-top:12px}
+.grid{display:grid;gap:12px}@media(min-width:900px){.g2{grid-template-columns:1fr 1fr}.lab{grid-template-columns:minmax(0,1fr) 340px}.lab>div:last-child{position:sticky;top:8px;align-self:start;max-height:calc(100vh - 16px);overflow:auto}}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.sl label{display:flex;justify-content:space-between;font-weight:600}.sl b{color:var(--amber)}
+input[type=range]{width:100%;accent-color:var(--amber)}
+input,select,textarea{font:inherit;background:var(--bg);color:var(--text);border:1px solid var(--edge);border-radius:8px;padding:6px 8px;width:100%}
+.ro{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}.ro div{border:1px solid var(--edge);border-radius:12px;padding:6px 2px}.ro small{display:block;color:var(--muted);font-size:.72rem}.ro b{color:var(--cyan);font-size:1.05rem}
+.note{border-left:3px solid var(--amber);padding:8px 12px;background:var(--bg);border-radius:0 8px 8px 0;margin-top:10px}.note.ok{border-color:var(--green)}.note.no{border-color:var(--red)}
+.bar{height:8px;border-radius:9px;background:var(--edge);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--amber);width:100%;transition:width .5s}
+.clock{font-weight:800;color:var(--amber);font-variant-numeric:tabular-nums}
+.opt{display:flex;gap:8px;padding:8px 10px;border:1px solid var(--edge);border-radius:10px;margin-top:6px;cursor:pointer}.opt.good{border-color:var(--green);background:rgba(123,224,176,.15)}.opt.bad{border-color:var(--red);background:rgba(255,90,79,.15)}
+.exp{display:none;margin-top:8px;border-left:3px solid var(--cyan);padding:6px 10px}
+.ed{border:1px solid var(--edge);border-radius:12px;padding:10px;margin-top:10px}.ed label{display:block;font-size:.85rem;margin-top:6px}
+.f4{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+#board{width:100%;height:auto;display:block;background:#a7c0f5;border:2px solid var(--edge);border-radius:14px;touch-action:none;user-select:none}
+.term{fill:rgba(255,255,255,.5);stroke:#2b5fb4;stroke-width:4;stroke-dasharray:6 4;cursor:crosshair}.term.s{fill:var(--amber)}
+.wire{fill:none;stroke-linejoin:round;stroke:#c4713f;stroke-width:10;stroke-linecap:round;cursor:pointer}.wire.live{stroke:#e8913f}.wire.sel{stroke:var(--red)}
+#pal{position:sticky;top:0;z-index:5;background:var(--card);padding:6px 0;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}@media(max-width:600px){#pal{grid-template-columns:repeat(3,1fr)}}#pal .btn{touch-action:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;font-size:.85rem}#g3,#l3{display:none;width:100%;border-radius:12px;overflow:hidden;background:radial-gradient(900px 500px at 25% 10%,#16627f 0%,#0b2a45 50%,#050d1a 100%)}#g3{aspect-ratio:16/10}#l3{aspect-ratio:2/1;border:2px solid var(--edge)}.b3{position:absolute;right:14px;top:14px;z-index:2;backdrop-filter:blur(8px);background:rgba(16,40,58,.6)}#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--card);border:1px solid var(--amber);border-radius:12px;padding:9px 16px;opacity:0;transition:.25s;pointer-events:none;z-index:9}#toast.show{opacity:1}
+[hidden]{display:none!important}
+body[data-lang=th] [data-l=en],body[data-lang=en] [data-l=th]{display:none}
+.stars{font-size:1.8rem;color:var(--amber)}
+.dg{width:100%;max-width:340px;color:var(--text);display:block;margin:auto}.dg .w{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.dg .r{fill:var(--card);stroke:var(--amber);stroke-width:2.5}.dg text{fill:currentColor;font:600 12px Kanit,sans-serif;text-anchor:middle}.dg text.ts{text-anchor:start}
+.lt{width:100%;border-collapse:collapse;font-size:.9rem}.lt th,.lt td{border-bottom:1px solid var(--edge);padding:6px 8px;text-align:left}.lt th{color:var(--amber)}
+.ex{border-left:3px solid var(--cyan);background:var(--bg);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;line-height:1.7}.fm{font-weight:800;color:var(--amber);font-size:1.1rem;text-align:center;line-height:1.8;margin:8px 0}
+#tab-learn h3{margin-top:18px;color:var(--cyan)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script><script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script></head>
+<body data-lang="th">
+<div class="wrap">
+<header>
+ <div><p class="eb" data-i="tag"></p><h1 data-i="title"></h1></div>
+ <nav class="tabs"><button class="tab on" data-tab="game" data-i="tGame"></button><button class="tab" data-tab="learn" data-i="tLearn"></button><button class="tab" data-tab="quiz" data-i="tQuiz"></button><button class="tab" data-tab="lab" data-i="tLab"></button></nav>
+ <div class="row" style="margin:0"><span id="clock" class="clock"></span><button id="langBtn" class="tab" type="button" aria-label="Language">EN</button></div>
+</header>
+
+<!-- GAME -->
+<section id="tab-game" class="grid g2">
+ <div>
+  <div class="card" id="mcard"></div>
+  <div class="card" style="padding:8px;position:relative"><div id="g3"></div><button class="btn b3" id="g3b" type="button">🧊 3D / 2D</button><canvas id="cc" aria-label="Animated circuit" style="width:100%;display:block;border-radius:12px;background:#0b1b2a"></canvas></div>
+  <div class="card">
+   <div id="topoBar" class="row" style="margin:0 0 8px"></div>
+   <div class="sl"><label for="sv"><span>V <small class="mut" id="lkv"></small></span><b id="lv"></b></label><input id="sv" type="range" min="1" max="24" step="0.5" value="5"></div>
+   <div class="sl"><label for="sr1"><span id="nr1">R</span> <small class="mut" id="lk1"></small><b id="lr1"></b></label><input id="sr1" type="range" min="10" max="1000" step="10" value="500"></div>
+   <div class="sl" id="w2"><label for="sr2"><span>R₂ <small class="mut" id="lk2"></small></span><b id="lr2"></b></label><input id="sr2" type="range" min="10" max="1000" step="10" value="500"></div>
+   <div class="sl" id="w3"><label for="sr3"><span>R₃ <small class="mut" id="lk3"></small></span><b id="lr3"></b></label><input id="sr3" type="range" min="10" max="1000" step="10" value="500"></div>
+   <div class="row"><button id="pw" class="btn main" type="button" disabled></button><button id="hb" class="btn" type="button" disabled data-i="hint"></button><button id="rs" class="btn" type="button" hidden></button><button id="ex" class="btn" type="button" hidden></button></div>
+  </div>
+ </div>
+ <div>
+  <div class="card">
+   <div class="ro" aria-live="polite"><div><small>V (V)</small><b id="rv"></b></div><div><small>I (A)</small><b id="ri"></b></div><div><small>R (Ω)</small><b id="rr"></b></div><div><small>P (W)</small><b id="rp"></b></div></div>
+   <div id="detail" class="mut" style="margin-top:10px;font-size:.9rem"></div>
+   <p class="mut" id="rule" style="font-size:.85rem;margin:8px 0 0"></p>
+  </div>
+  <div class="card"><h3 id="chTitle"></h3><div id="chList"></div></div>
+  <div class="card">
+   <div class="row" style="margin:0"><h3 data-i="mEdTitle"></h3><button id="mEdBtn" class="btn" type="button" data-i="manage"></button></div>
+   <div id="mEd" hidden></div>
+  </div>
+ </div>
+</section>
+
+<!-- LEARN -->
+<section id="tab-learn" hidden>
+ <div class="card">
+<div data-l="th"><p class="eb">บทเรียนย่อ ม.3</p><h2>ไฟฟ้าเบื้องต้น: V, I, R และกฎของโอห์ม</h2>
+<h3>1) ปริมาณไฟฟ้าที่ต้องรู้</h3>
+<div style="overflow-x:auto"><table class="lt"><tr><th>ปริมาณ</th><th>สัญลักษณ์</th><th>หน่วย</th><th>เครื่องมือวัด</th><th>การต่อ</th></tr><tr><td>ความต่างศักย์</td><td>V</td><td>โวลต์ (V)</td><td>โวลต์มิเตอร์</td><td>ต่อ<b>ขนาน</b>กับอุปกรณ์</td></tr><tr><td>กระแสไฟฟ้า</td><td>I</td><td>แอมแปร์ (A)</td><td>แอมมิเตอร์</td><td>ต่อ<b>อนุกรม</b>ในวงจร</td></tr><tr><td>ความต้านทาน</td><td>R</td><td>โอห์ม (Ω)</td><td>โอห์มมิเตอร์</td><td>วัดตอนไม่มีไฟในวงจร</td></tr><tr><td>กำลังไฟฟ้า</td><td>P</td><td>วัตต์ (W)</td><td>คำนวณ</td><td>P = V × I</td></tr></table></div>
+<p class="mut">แปลงหน่วย: 1 A = 1000 mA · 1 kΩ = 1000 Ω · ในเกมและห้องฝึก <b>ใช้หน่วย A, V, Ω</b> เช่น 60 mA = 0.06 A</p>
+<h3>2) กฎของโอห์ม</h3>
+<div class="grid g2"><div><p>เมื่อ<b>อุณหภูมิคงที่</b> กระแสไฟฟ้าผ่านตัวนำแปรผันตรงกับความต่างศักย์ระหว่างปลายตัวนำ (อัตราส่วน V ÷ I คงที่ คือค่า R)</p><p class="fm">V = I × R<br>I = V ÷ R<br>R = V ÷ I</p></div><div style="text-align:center"><svg class="dg" viewBox="0 0 160 130" role="img" aria-label="V I R triangle"><polygon class="w" points="80,8 152,118 8,118"/><line class="w" x1="42" y1="66" x2="118" y2="66"/><line class="w" x1="80" y1="66" x2="80" y2="118"/><text x="80" y="52" style="font-size:22px;fill:var(--amber)">V</text><text x="44" y="102" style="font-size:22px;fill:var(--cyan)">I</text><text x="116" y="102" style="font-size:22px">R</text></svg><small class="mut">ปิดตัวที่ต้องการหา แล้วอ่านที่เหลือ: V อยู่บนเป็นตัวหาร, I กับ R อยู่ล่างเป็นตัวคูณ</small></div></div>
+<div class="ex"><b>ตัวอย่าง 1 (หา I)</b> 12 V ต่อกับ R = 200 Ω<br>I = V ÷ R = 12 ÷ 200 = <b>0.06 A</b> (60 mA)</div>
+<div class="ex"><b>ตัวอย่าง 2 (หา V)</b> ต้องการ I = 0.15 A ผ่าน R = 100 Ω<br>V = I × R = 0.15 × 100 = <b>15 V</b></div>
+<div class="ex"><b>ตัวอย่าง 3 (หา R)</b> V = 9 V, I = 0.045 A<br>R = V ÷ I = 9 ÷ 0.045 = <b>200 Ω</b></div>
+<p class="mut">ความต้านทานของลวดตัวนำ: ยาวขึ้น → R เพิ่ม · หน้าตัดใหญ่ขึ้น → R ลด · โลหะอุณหภูมิสูงขึ้น → R เพิ่ม (ไส้หลอดไฟร้อนมากจึงไม่เป็นไปตามกฎโอห์มเป๊ะ)</p>
+<h3>3) วงจรอนุกรม</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Series circuit"><path class="w" d="M30 58V30H270V120H30V66"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="75" y="21" width="60" height="18" rx="3"/><rect class="r" x="175" y="21" width="60" height="18" rx="3"/><text x="105" y="14">R₁ 100 Ω</text><text x="205" y="14">R₂ 200 Ω</text><text x="105" y="56" style="fill:var(--cyan)">V₁ = 4 V</text><text x="205" y="56" style="fill:var(--cyan)">V₂ = 8 V</text><text x="150" y="108" style="fill:var(--amber)">I = 0.04 A →</text><text x="150" y="138">12 V</text></svg></div><div><p class="fm">I = I₁ = I₂<br>V = V₁ + V₂<br>R รวม = R₁ + R₂</p><div class="ex"><b>ตัวอย่าง 3.1 · หา R รวม</b><br>R₁ = 100 Ω, R₂ = 200 Ω<br>R รวม = R₁ + R₂ = 100 + 200 = <b>300 Ω</b></div><div class="ex"><b>ตัวอย่าง 3.2 · หา I (I = I₁ = I₂)</b><br>V = 12 V<br>I = V ÷ R รวม = 12 ÷ 300 = <b>0.04 A</b></div><div class="ex"><b>ตัวอย่าง 3.3 · หา V แต่ละตัว (V = V₁ + V₂)</b><br>V₁ = I × R₁ = 0.04 × 100 = <b>4 V</b><br>V₂ = I × R₂ = 0.04 × 200 = <b>8 V</b><br>ตรวจ: 4 + 8 = 12 V ✓</div></div></div>
+<h3>4) วงจรขนาน</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Parallel circuit"><path class="w" d="M30 58V30H230 M30 66V120H230 M110 30V50 M110 90V120 M230 30V50 M230 90V120"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="101" y="50" width="18" height="40" rx="3"/><rect class="r" x="221" y="50" width="18" height="40" rx="3"/><circle cx="110" cy="30" r="3.5" fill="currentColor"/><circle cx="110" cy="120" r="3.5" fill="currentColor"/><text class="ts" x="126" y="66">R₁ 200 Ω</text><text class="ts" x="126" y="82" style="fill:var(--amber)">I₁ = 0.06 A</text><text class="ts" x="246" y="66">R₂ 300 Ω</text><text class="ts" x="246" y="82" style="fill:var(--amber)">I₂ = 0.04 A</text><text x="70" y="22" style="fill:var(--amber)">I = 0.1 A</text><text x="70" y="140">12 V</text></svg></div><div><p class="fm">V = V₁ = V₂<br>I = I₁ + I₂<br>1/R รวม = 1/R₁ + 1/R₂<br>(สองตัว) R รวม = R₁R₂ ÷ (R₁+R₂)</p><div class="ex"><b>ตัวอย่าง 4.1 · หา V แต่ละสาขา (V = V₁ = V₂)</b><br>ต่อขนานแรงดันเท่ากัน → V₁ = V₂ = <b>12 V</b></div><div class="ex"><b>ตัวอย่าง 4.2 · หา I แต่ละสาขา</b><br>I₁ = V ÷ R₁ = 12 ÷ 200 = <b>0.06 A</b><br>I₂ = V ÷ R₂ = 12 ÷ 300 = <b>0.04 A</b></div><div class="ex"><b>ตัวอย่าง 4.3 · หา I รวม (I = I₁ + I₂)</b><br>I = 0.06 + 0.04 = <b>0.1 A</b></div><div class="ex"><b>ตัวอย่าง 4.4 · หา R รวม</b><br>R รวม = R₁R₂ ÷ (R₁+R₂) = (200×300) ÷ 500 = <b>120 Ω</b><br>ตรวจ: 12 ÷ 120 = 0.1 A ✓</div></div></div>
+<p class="mut">ต่อขนานแล้ว R รวม<b>น้อยลง</b> และน้อยกว่าตัวที่น้อยที่สุดเสมอ</p>
+<h3>5) วงจรผสม</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 340 150" role="img" aria-label="Mixed circuit"><path class="w" d="M30 58V30H250 M30 66V120H250 M170 30V50 M170 90V120 M250 30V50 M250 90V120"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="60" y="21" width="60" height="18" rx="3"/><rect class="r" x="161" y="50" width="18" height="40" rx="3"/><rect class="r" x="241" y="50" width="18" height="40" rx="3"/><circle cx="170" cy="30" r="3.5" fill="currentColor"/><circle cx="170" cy="120" r="3.5" fill="currentColor"/><text x="90" y="14">R₁ 100 Ω</text><text x="90" y="56" style="fill:var(--cyan)">V₁ = 9 V</text><text class="ts" x="184" y="66">R₂ 200 Ω</text><text class="ts" x="184" y="82" style="fill:var(--amber)">0.045 A</text><text class="ts" x="264" y="66">R₃ 200 Ω</text><text class="ts" x="264" y="82" style="fill:var(--amber)">0.045 A</text><text x="100" y="110" style="fill:var(--amber)">I = 0.09 A</text><text x="100" y="140">18 V</text></svg></div><div><p>ขั้นตอน: ① หา R₂∥R₃ ② บวกกับ R₁ (อนุกรม) ③ I = V ÷ R รวม ④ หา V ตกคร่อมแต่ละส่วน</p><div class="ex"><b>ตัวอย่าง 5.1 · หา R₂∥R₃</b><br>18 V, R₁ = 100 Ω, R₂ = R₃ = 200 Ω<br>R₂∥R₃ = (200×200) ÷ 400 = <b>100 Ω</b></div><div class="ex"><b>ตัวอย่าง 5.2 · หา R รวม</b><br>R รวม = R₁ + R₂∥R₃ = 100 + 100 = <b>200 Ω</b></div><div class="ex"><b>ตัวอย่าง 5.3 · หา I รวม</b><br>I = V ÷ R รวม = 18 ÷ 200 = <b>0.09 A</b></div><div class="ex"><b>ตัวอย่าง 5.4 · หา V และ I แต่ละส่วน</b><br>V₁ = 0.09 × 100 = <b>9 V</b> · ส่วนขนานรับ 18 − 9 = <b>9 V</b><br>I₂ = I₃ = 9 ÷ 200 = <b>0.045 A</b> (รวม 0.09 A ✓)</div></div></div>
+<h3>6) กำลังไฟฟ้าและพลังงาน</h3>
+<p class="fm">P = V × I = I² × R = V² ÷ R<br>E = P × t</p>
+<div class="ex"><b>ตัวอย่าง</b> หลอดไฟ 6 V กระแส 0.5 A → P = 6 × 0.5 = <b>3 W</b> เปิด 2 ชั่วโมง E = 3 × 2 = 6 W·h = 0.006 kWh (หน่วยไฟ)</div>
+<h3>7) การต่อเครื่องวัด</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Meters"><path class="w" d="M30 88V60H270V130H30V96 M120 60V20H136 M164 20H180V60"/><line class="w" x1="20" y1="88" x2="40" y2="88"/><line class="w" style="stroke-width:6" x1="25" y1="96" x2="35" y2="96"/><rect class="r" x="120" y="51" width="60" height="18" rx="3"/><circle class="r" cx="150" cy="20" r="14" style="stroke:var(--cyan)"/><text x="150" y="25" style="fill:var(--cyan)">V</text><circle class="r" cx="270" cy="95" r="14"/><text x="270" y="100" style="fill:var(--amber)">A</text><text x="150" y="82">R</text><text x="85" y="122" style="fill:var(--muted)">⏻</text></svg></div><div><p>• <b>แอมมิเตอร์ (A)</b> ต่ออนุกรม เพราะต้องให้กระแสทั้งหมดไหลผ่าน ความต้านทานภายในต่ำมาก<br>• <b>โวลต์มิเตอร์ (V)</b> ต่อขนานคร่อมอุปกรณ์ ความต้านทานภายในสูงมาก<br>• ต่อสลับกันจะอ่านผิดหรือวงจรเสียหาย ลองต่อเองได้ในแท็บ “ฝึกต่อวงจร”</p></div></div>
+<h3>8) ข้อผิดพลาดที่พบบ่อย</h3>
+<div class="ex">❌ ลืมแปลง mA เป็น A (60 mA = 0.06 A)<br>❌ ใช้สูตรอนุกรมกับวงจรขนาน (หรือกลับกัน)<br>❌ คิดว่าต่อขนานแล้ว R รวมเพิ่มขึ้น (ที่จริงลดลง)<br>❌ ต่อโวลต์มิเตอร์แบบอนุกรม</div></div>
+<div data-l="en"><p class="eb">QUICK LESSON · GRADE 9</p><h2>Basic electricity: V, I, R and Ohm’s law</h2>
+<h3>1) Key quantities</h3>
+<div style="overflow-x:auto"><table class="lt"><tr><th>Quantity</th><th>Symbol</th><th>Unit</th><th>Instrument</th><th>Connection</th></tr><tr><td>Potential difference</td><td>V</td><td>volt (V)</td><td>Voltmeter</td><td><b>Parallel</b> across the part</td></tr><tr><td>Current</td><td>I</td><td>ampere (A)</td><td>Ammeter</td><td><b>Series</b> in the circuit</td></tr><tr><td>Resistance</td><td>R</td><td>ohm (Ω)</td><td>Ohmmeter</td><td>Measure with power off</td></tr><tr><td>Power</td><td>P</td><td>watt (W)</td><td>Calculated</td><td>P = V × I</td></tr></table></div>
+<p class="mut">Conversions: 1 A = 1000 mA · 1 kΩ = 1000 Ω · the game and lab use <b>A, V, Ω</b> only, e.g. 60 mA = 0.06 A.</p>
+<h3>2) Ohm’s law</h3>
+<div class="grid g2"><div><p>At <b>constant temperature</b>, the current through a conductor is directly proportional to the potential difference across it (the ratio V ÷ I is constant and equals R).</p><p class="fm">V = I × R<br>I = V ÷ R<br>R = V ÷ I</p></div><div style="text-align:center"><svg class="dg" viewBox="0 0 160 130" role="img" aria-label="V I R triangle"><polygon class="w" points="80,8 152,118 8,118"/><line class="w" x1="42" y1="66" x2="118" y2="66"/><line class="w" x1="80" y1="66" x2="80" y2="118"/><text x="80" y="52" style="font-size:22px;fill:var(--amber)">V</text><text x="44" y="102" style="font-size:22px;fill:var(--cyan)">I</text><text x="116" y="102" style="font-size:22px">R</text></svg><small class="mut">Cover the unknown and read the rest: V on top divides, I and R at the bottom multiply.</small></div></div>
+<div class="ex"><b>Example 1 (find I)</b> 12 V across R = 200 Ω<br>I = V ÷ R = 12 ÷ 200 = <b>0.06 A</b> (60 mA)</div>
+<div class="ex"><b>Example 2 (find V)</b> Need I = 0.15 A through R = 100 Ω<br>V = I × R = 0.15 × 100 = <b>15 V</b></div>
+<div class="ex"><b>Example 3 (find R)</b> V = 9 V, I = 0.045 A<br>R = V ÷ I = 9 ÷ 0.045 = <b>200 Ω</b></div>
+<p class="mut">Resistance of a wire: longer → higher R · thicker → lower R · hotter metal → higher R (a glowing bulb filament does not follow Ohm’s law exactly).</p>
+<h3>3) Series circuit</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Series circuit"><path class="w" d="M30 58V30H270V120H30V66"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="75" y="21" width="60" height="18" rx="3"/><rect class="r" x="175" y="21" width="60" height="18" rx="3"/><text x="105" y="14">R₁ 100 Ω</text><text x="205" y="14">R₂ 200 Ω</text><text x="105" y="56" style="fill:var(--cyan)">V₁ = 4 V</text><text x="205" y="56" style="fill:var(--cyan)">V₂ = 8 V</text><text x="150" y="108" style="fill:var(--amber)">I = 0.04 A →</text><text x="150" y="138">12 V</text></svg></div><div><p class="fm">I = I₁ = I₂<br>V = V₁ + V₂<br>R total = R₁ + R₂</p><div class="ex"><b>Example 3.1 · Find R total</b><br>R₁ = 100 Ω, R₂ = 200 Ω<br>R total = R₁ + R₂ = 100 + 200 = <b>300 Ω</b></div><div class="ex"><b>Example 3.2 · Find I (I = I₁ = I₂)</b><br>V = 12 V<br>I = V ÷ R total = 12 ÷ 300 = <b>0.04 A</b></div><div class="ex"><b>Example 3.3 · Find each V (V = V₁ + V₂)</b><br>V₁ = I × R₁ = 0.04 × 100 = <b>4 V</b><br>V₂ = I × R₂ = 0.04 × 200 = <b>8 V</b><br>Check: 4 + 8 = 12 V ✓</div></div></div>
+<h3>4) Parallel circuit</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Parallel circuit"><path class="w" d="M30 58V30H230 M30 66V120H230 M110 30V50 M110 90V120 M230 30V50 M230 90V120"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="101" y="50" width="18" height="40" rx="3"/><rect class="r" x="221" y="50" width="18" height="40" rx="3"/><circle cx="110" cy="30" r="3.5" fill="currentColor"/><circle cx="110" cy="120" r="3.5" fill="currentColor"/><text class="ts" x="126" y="66">R₁ 200 Ω</text><text class="ts" x="126" y="82" style="fill:var(--amber)">I₁ = 0.06 A</text><text class="ts" x="246" y="66">R₂ 300 Ω</text><text class="ts" x="246" y="82" style="fill:var(--amber)">I₂ = 0.04 A</text><text x="70" y="22" style="fill:var(--amber)">I = 0.1 A</text><text x="70" y="140">12 V</text></svg></div><div><p class="fm">V = V₁ = V₂<br>I = I₁ + I₂<br>1/R total = 1/R₁ + 1/R₂<br>(two resistors) R total = R₁R₂ ÷ (R₁+R₂)</p><div class="ex"><b>Example 4.1 · Find each branch V (V = V₁ = V₂)</b><br>Parallel: same voltage → V₁ = V₂ = <b>12 V</b></div><div class="ex"><b>Example 4.2 · Find each branch I</b><br>I₁ = V ÷ R₁ = 12 ÷ 200 = <b>0.06 A</b><br>I₂ = V ÷ R₂ = 12 ÷ 300 = <b>0.04 A</b></div><div class="ex"><b>Example 4.3 · Find I total (I = I₁ + I₂)</b><br>I = 0.06 + 0.04 = <b>0.1 A</b></div><div class="ex"><b>Example 4.4 · Find R total</b><br>R total = R₁R₂ ÷ (R₁+R₂) = (200×300) ÷ 500 = <b>120 Ω</b><br>Check: 12 ÷ 120 = 0.1 A ✓</div></div></div>
+<p class="mut">Adding resistors in parallel <b>lowers</b> the total resistance, always below the smallest one.</p>
+<h3>5) Mixed circuit</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 340 150" role="img" aria-label="Mixed circuit"><path class="w" d="M30 58V30H250 M30 66V120H250 M170 30V50 M170 90V120 M250 30V50 M250 90V120"/><line class="w" x1="20" y1="58" x2="40" y2="58"/><line class="w" style="stroke-width:6" x1="25" y1="66" x2="35" y2="66"/><text x="50" y="58">+</text><text x="50" y="76">−</text><rect class="r" x="60" y="21" width="60" height="18" rx="3"/><rect class="r" x="161" y="50" width="18" height="40" rx="3"/><rect class="r" x="241" y="50" width="18" height="40" rx="3"/><circle cx="170" cy="30" r="3.5" fill="currentColor"/><circle cx="170" cy="120" r="3.5" fill="currentColor"/><text x="90" y="14">R₁ 100 Ω</text><text x="90" y="56" style="fill:var(--cyan)">V₁ = 9 V</text><text class="ts" x="184" y="66">R₂ 200 Ω</text><text class="ts" x="184" y="82" style="fill:var(--amber)">0.045 A</text><text class="ts" x="264" y="66">R₃ 200 Ω</text><text class="ts" x="264" y="82" style="fill:var(--amber)">0.045 A</text><text x="100" y="110" style="fill:var(--amber)">I = 0.09 A</text><text x="100" y="140">18 V</text></svg></div><div><p>Steps: ① find R₂∥R₃ ② add R₁ (series) ③ I = V ÷ R total ④ find the voltage across each part.</p><div class="ex"><b>Example 5.1 · Find R₂∥R₃</b><br>18 V, R₁ = 100 Ω, R₂ = R₃ = 200 Ω<br>R₂∥R₃ = (200×200) ÷ 400 = <b>100 Ω</b></div><div class="ex"><b>Example 5.2 · Find R total</b><br>R total = R₁ + R₂∥R₃ = 100 + 100 = <b>200 Ω</b></div><div class="ex"><b>Example 5.3 · Find I total</b><br>I = V ÷ R total = 18 ÷ 200 = <b>0.09 A</b></div><div class="ex"><b>Example 5.4 · Find each V and I</b><br>V₁ = 0.09 × 100 = <b>9 V</b> · parallel part gets 18 − 9 = <b>9 V</b><br>I₂ = I₃ = 9 ÷ 200 = <b>0.045 A</b> (total 0.09 A ✓)</div></div></div>
+<h3>6) Power and energy</h3>
+<p class="fm">P = V × I = I² × R = V² ÷ R<br>E = P × t</p>
+<div class="ex"><b>Example</b> A 6 V bulb draws 0.5 A → P = 6 × 0.5 = <b>3 W</b>. On for 2 hours: E = 3 × 2 = 6 W·h = 0.006 kWh (units on the bill).</div>
+<h3>7) Connecting meters</h3>
+<div class="grid g2"><div><svg class="dg" viewBox="0 0 300 150" role="img" aria-label="Meters"><path class="w" d="M30 88V60H270V130H30V96 M120 60V20H136 M164 20H180V60"/><line class="w" x1="20" y1="88" x2="40" y2="88"/><line class="w" style="stroke-width:6" x1="25" y1="96" x2="35" y2="96"/><rect class="r" x="120" y="51" width="60" height="18" rx="3"/><circle class="r" cx="150" cy="20" r="14" style="stroke:var(--cyan)"/><text x="150" y="25" style="fill:var(--cyan)">V</text><circle class="r" cx="270" cy="95" r="14"/><text x="270" y="100" style="fill:var(--amber)">A</text><text x="150" y="82">R</text><text x="85" y="122" style="fill:var(--muted)">⏻</text></svg></div><div><p>• <b>Ammeter (A)</b> in series, so all the current passes through it; very low internal resistance.<br>• <b>Voltmeter (V)</b> in parallel across the part; very high internal resistance.<br>• Swapping them gives wrong readings or can damage the circuit. Try it in the “Circuit practice” tab.</p></div></div>
+<h3>8) Common mistakes</h3>
+<div class="ex">❌ Forgetting to convert mA to A (60 mA = 0.06 A)<br>❌ Using series formulas for parallel (or the reverse)<br>❌ Thinking parallel raises total R (it lowers it)<br>❌ Connecting a voltmeter in series</div></div>
+<div class="ed"><h3><span data-l="th">🧮 เครื่องคิดเลขกฎของโอห์ม</span><span data-l="en">🧮 Ohm’s law calculator</span></h3><p class="mut" style="margin:2px 0"><span data-l="th">กรอก 2 ช่อง เว้นช่องที่ต้องการหาไว้ 1 ช่อง</span><span data-l="en">Fill two boxes, leave the unknown blank.</span></p><div class="f4" style="grid-template-columns:repeat(3,1fr)"><label>V (V)<input id="cV" type="number" step="any" min="0"></label><label>I (A)<input id="cI" type="number" step="any" min="0"></label><label>R (Ω)<input id="cR" type="number" step="any" min="0"></label></div><div class="row"><button class="btn main" type="button" onclick="calcOhm()"><span data-l="th">คำนวณ</span><span data-l="en">Calculate</span></button><button class="btn" type="button" onclick="['cV','cI','cR'].forEach(i=>$(i).value='');$('cOut').textContent=''"><span data-l="th">ล้าง</span><span data-l="en">Clear</span></button></div><p class="note" id="cOut" role="status" style="min-height:1.6em"></p></div>
+<div class="row"><button class="btn main" type="button" onclick="switchTab('lab')"><span data-l="th">🔧 ไปฝึกต่อวงจร</span><span data-l="en">🔧 Practice circuits</span></button><button class="btn" type="button" onclick="switchTab('game')"><span data-l="th">⚡ ไปทำภารกิจ</span><span data-l="en">⚡ Go to missions</span></button><button class="btn" type="button" onclick="switchTab('quiz')"><span data-l="th">📝 ทำแบบฝึกหัด</span><span data-l="en">📝 Exercises</span></button></div>
+ </div>
+</section>
+
+<!-- QUIZ -->
+<section id="tab-quiz" hidden>
+ <div class="card">
+  <div class="row" style="margin:0"><select id="setSel" style="max-width:260px" aria-label="Quiz set"></select><button class="btn" id="setNew" type="button" data-i="newSet"></button><button class="btn" id="qEdBtn" type="button" data-i="manage"></button></div>
+  <h2 id="qTitle"></h2><div id="qbox"></div>
+  <div class="row"><button class="btn main" id="qCheck" type="button" data-i="check"></button><button class="btn" id="qRetry" type="button" data-i="retry"></button><b id="qscore" class="clock"></b></div>
+  <div id="qEd" hidden></div>
+ </div>
+</section>
+
+<!-- LAB -->
+<section id="tab-lab" hidden>
+ <div class="card">
+  <div id="chal" class="note" hidden></div><p class="eb" data-i="labEb"></p><h2 data-i="labTitle"></h2><p class="mut" data-i="labIntro"></p>
+  
+  <div class="row"><button class="btn main" id="labPower" type="button"></button><button class="btn" id="labRot" type="button" data-i="rot"></button><button class="btn" id="labDel" type="button" data-i="del"></button><button class="btn" id="labClear" type="button" data-i="clear"></button><button class="btn" id="labDir" type="button"></button><button class="btn" id="ex1" type="button" data-i="exS"></button><button class="btn" id="ex2" type="button" data-i="exP"></button><button class="btn" id="lab3" type="button">🧊 มุมมอง 3D</button><button class="btn" id="labHand" type="button">🖐 โหมดมือ</button></div>
+  <div class="grid lab" style="margin-top:10px">
+   <div><div id="pal"></div><svg id="board" viewBox="0 0 1400 700" role="img" aria-label="Circuit board"></svg><div id="l3"></div><p class="note" id="labMsg" role="status"></p></div>
+   <div>
+    <div class="ed" style="margin-top:0"><h3 data-i="insp"></h3><div id="insp"></div></div>
+    <div class="ro" style="margin-top:10px"><div><small>V (V)</small><b id="lV">–</b></div><div><small>I (A)</small><b id="lI">–</b></div><div><small>R (Ω)</small><b id="lR">–</b></div><div><small>P (W)</small><b id="lP">–</b></div></div>
+    <div class="ed"><h3 data-i="meters"></h3><div id="meters"></div></div>
+    <div class="ed"><h3 data-i="tblTitle"></h3><div id="tbl"></div></div>
+   </div>
+  </div>
+ </div>
+</section>
+<p class="mut" style="text-align:center;font-size:.8rem" data-i="foot"></p>
+</div>
+<video id="hvid" playsinline muted style="position:fixed;right:10px;bottom:10px;width:150px;border-radius:10px;transform:scaleX(-1);display:none;z-index:8"></video><div id="hcur" style="position:fixed;display:none;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid #fff;opacity:.85;pointer-events:none;z-index:9"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const $=id=>document.getElementById(id),clone=o=>JSON.parse(JSON.stringify(o));
+const ld=(k,d)=>{try{const s=localStorage.getItem(k);return s?JSON.parse(s):d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let lang=ld('ohmLangV2','th');
+/* ---------- i18n ---------- */
+const D={
+tag:['ภารกิจวิทยาศาสตร์ ม.3 · วงจรไฟฟ้าและกฎของโอห์ม','Grade 9 science · Circuits & Ohm’s law'],
+title:['กู้ภัย <span>ไฟฟ้าวิกฤต</span>','<span>Electricity</span> Rescue'],
+tGame:['⚡ ภารกิจ','⚡ Missions'],tLearn:['🎮 บทเรียนย่อ','📘 Lesson'],tQuiz:['📝 แบบฝึกหัด','📝 Exercises'],tLab:['🔧 ฝึกต่อวงจร','🔧 Circuit practice'],
+hint:['💡 คำใบ้ (−5 วิ)','💡 Hint (−5 s)'],pOn:['⏻ จ่ายไฟ','⏻ Power on'],pOff:['⏻ ตัดไฟ','⏻ Power off'],
+manage:['🛠 จัดการ','🛠 Manage'],mEdTitle:['จัดการโจทย์เกม','Edit game missions'],newSet:['+ ชุดข้อสอบใหม่','+ New set'],
+check:['✔ ตรวจคำตอบ','✔ Check'],retry:['↻ ทำใหม่','↻ Retry'],
+labEb:['ห้องฝึกต่อวงจร','CIRCUIT PRACTICE'],labTitle:['ต่อวงจรได้อย่างอิสระ','Build circuits freely'],
+labIntro:['กดอุปกรณ์เพื่อวางบนบอร์ด ลากเพื่อย้าย แล้วคลิกขั้ว (วงกลมฟ้า) 2 จุดเพื่อต่อสายไฟ คลิกสายเพื่อเลือกแล้วลบได้ ระหว่างลากสาย คลิกที่ว่างบนบอร์ดเพื่อ “หักมุม” ได้ตามต้องการ (กด Esc ยกเลิกสาย) แล้วกด “จ่ายไฟ” เพื่อดูผล และปรับค่าด้านขวาได้ทันที','Click a part to place it, drag to move, then click two terminals (blue dots) to wire them. Click a wire to select/delete it. Press “Power on” and edit values on the right to see instant results.'],
+rot:['⤾ หมุน','⤾ Rotate'],del:['⌫ ลบที่เลือก','⌫ Delete'],clear:['↺ ล้างบอร์ด','↺ Clear'],exS:['ตัวอย่าง: อนุกรม','Example: series'],exP:['ตัวอย่าง: ขนาน','Example: parallel'],
+insp:['อุปกรณ์ที่เลือก','Selected part'],meters:['เครื่องวัด','Meters'],noSel:['เลือกอุปกรณ์บนบอร์ดเพื่อปรับค่า','Select a part to edit it.'],
+battery:['ถ่าน','Battery'],resistor:['ตัวต้านทาน','Resistor'],bulb:['หลอดไฟ','Bulb'],switch:['สวิตช์','Switch'],voltmeter:['โวลต์มิเตอร์','Voltmeter'],ammeter:['แอมมิเตอร์','Ammeter'],
+mV:['แรงดัน (V)','Voltage (V)'],mR:['ความต้านทาน (Ω)','Resistance (Ω)'],sw:['สวิตช์ปิดวงจร','Switch closed'],
+msgEmpty:['บอร์ดว่าง กดอุปกรณ์ด้านบนเพื่อวาง','Board is empty. Click a part above.'],msgNoBat:['ต้องมีถ่านในวงจร','Add a battery.'],msgShort:['⚠ ลัดวงจรที่ถ่าน! ตรวจสายไฟ','⚠ Short circuit at the battery! Check wires.'],msgOpen:['วงจรยังไม่ครบ ไม่มีกระแสไหล','Open circuit: no current flows.'],msgOff:['ปิดไฟอยู่ กด “จ่ายไฟ”','Power is off. Press “Power on”.'],msgOn:['จ่ายไฟแล้ว · คำนวณจากการต่อจริง','Powered · computed from the real wiring'],msgWire:['คลิกขั้วที่สองเพื่อต่อสาย','Click the second terminal.'],
+off:['ปิดไฟ','power off'],
+mTitle:['ภารกิจ','Mission'],goal:['เป้าหมาย','Goal'],fuseTxt:['ฟิวส์ไม่เกิน 0.3 A','Fuse limit 0.3 A'],
+idleH:['ไฟดับทั้งตึก!','Blackout!'],idleP:['ตั้งค่า V และ R คำนวณกระแส (หน่วย A) ด้วย I = V ÷ R แล้วกดจ่ายไฟ ถ้า I เกิน 0.3 A ฟิวส์ขาด · ตอนนี้ลองปรับค่าเล่นได้อิสระ','Set V and R, compute current (in A) with I = V ÷ R, then power on. If I exceeds 0.3 A the fuse blows. You can play freely for now.'],
+startB:['เริ่มภารกิจ →','Start missions →'],doneH:['ไฟกลับมาแล้ว!','Power restored!'],loseH:['หมดเวลา','Time is up'],again:['เล่นอีกครั้ง','Play again'],
+locked:['🔒','🔒'],ok:['✅ ถูกต้อง!','✅ Correct!'],tooLow:['กระแสน้อยเกินไป','Current too low'],tooHigh:['กระแสมากเกินไป','Current too high'],blown:['ฟิวส์ขาด! เกิน 0.3 A','Fuse blown! Over 0.3 A'],
+hintA:['คำใบ้: R รวมที่ต้องการ = V ÷ I =','Hint: required total R = V ÷ I ='],hintB:['คำใบ้: V = I × R รวม =','Hint: V = I × R total ='],hintC:['คำใบ้: ใช้ R = V ÷ I และ V = I × R','Hint: use R = V ÷ I and V = I × R'],
+tSimple:['วงจรอย่างง่าย','Simple'],tSeries:['อนุกรม','Series'],tParallel:['ขนาน','Parallel'],tMixed:['ผสม','Mixed'],
+rSimple:['I = V ÷ R','I = V ÷ R'],rSeries:['อนุกรม: I เท่ากัน · R รวม = R₁ + R₂','Series: same I · R = R₁ + R₂'],rParallel:['ขนาน: V เท่ากัน · I รวม = I₁ + I₂','Parallel: same V · I = I₁ + I₂'],rMixed:['ผสม: หา R₂∥R₃ ก่อน แล้วบวก R₁','Mixed: find R₂∥R₃ first, then add R₁'],
+addM:['+ เพิ่มโจทย์','+ Add mission'],save:['บันทึก','Save'],reset:['↺ รีเซต','↺ Reset'],delB:['ลบ','Delete'],
+mText:['โจทย์','Statement'],mTopo:['วงจร','Circuit'],mLock:['ค่าที่ล็อก (ว่าง = ปรับได้)','Locked values (blank = adjustable)'],mTarget:['กระแสเป้าหมาย I (A)','Target current I (A)'],
+q:['โจทย์','Question'],choice:['ตัวเลือก','Choice'],correct:['คำตอบที่ถูก','Correct answer'],expl:['คำอธิบายเฉลย','Explanation'],ans:['เฉลย:','Answer:'],
+addQ:['+ เพิ่มข้อ','+ Add question'],setName:['ชื่อชุด','Set name'],delSet:['ลบชุดนี้','Delete set'],resetAll:['รีเซตเป็นชุดเริ่มต้น','Reset to default'],saved:['บันทึกแล้ว','Saved'],confirmReset:['รีเซตทั้งหมดเป็นค่าเริ่มต้น?','Reset everything to defaults?'],score:['คะแนน','Score'],qNo:['ข้อ','Q'],
+foot:['สื่อโต้ตอบกฎของโอห์ม ชั้นมัธยมศึกษาปีที่ 3','Interactive Ohm’s law · Grade 9'],newSetName:['ชุดใหม่','New set'],newQ:['คำถามใหม่','New question'],newMs:['โจทย์ใหม่: ตั้งกระแสให้ได้ตามเป้าหมาย','New mission: reach the target current'],
+conf:['ยืนยันการลบ?','Delete this?'],dirC:['➡ ทิศกระแส (+ → −)','➡ Conventional current (+ → −)'],dirE:['⬅ ทิศอิเล็กตรอน (− → +)','⬅ Electron flow (− → +)'],mVr:['แรงดันพิกัดของหลอด (V)','Bulb rated voltage (V)'],tblTitle:['ผลของแต่ละอุปกรณ์','Results per component'],bri:['ความสว่าง','Brightness'],over:['⚠ เกินพิกัด ไส้หลอดอาจขาด','⚠ Over rating: filament may burn out'],dim:['สว่างน้อยกว่าพิกัด','below rated brightness']
+};
+const t=k=>(D[k]||[k,k])[lang==='en'?1:0];
+function applyLang(){
+ document.body.dataset.lang=lang;document.documentElement.lang=lang;$('langBtn').textContent=lang==='th'?'EN':'ไทย';
+ document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=t(e.dataset.i)});
+ buildPalette();renderAll();
+}
+$('langBtn').onclick=()=>{lang=lang==='th'?'en':'th';sv('ohmLangV2',lang);applyLang()};
+let tm;function toast(m){const e=$('toast');e.textContent=m;e.className='show';clearTimeout(tm);tm=setTimeout(()=>e.className='',2200)}
+function switchTab(id){['game','learn','quiz','lab'].forEach(x=>$('tab-'+x).hidden=x!==id);document.querySelectorAll('.tab[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));if(id==='lab')renderLab();if(id==='game')rsz()}
+document.querySelectorAll('.tab[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+const fA=n=>Number.isFinite(n)?(+n.toFixed(4)).toString():'∞',fN=(n,d=2)=>Number.isFinite(n)?(+n.toFixed(d)).toString():'∞';
+
+/* ================= GAME ================= */
+const FUSE=0.3;
+const DEFM=[
+{topo:'simple',t:'ไฟฉุกเฉินต้องการกระแส 0.06 A แหล่งจ่ายล็อกที่ 12 V ปรับ R ให้ถูกต้อง',te:'The emergency lamp needs 0.06 A. The supply is locked at 12 V. Set R.',lock:{v:12},I:0.06},
+{topo:'simple',t:'ตัวต้านทาน 100 Ω ล็อกไว้ ต้องการกระแส 0.15 A ปรับ V',te:'R is locked at 100 Ω. You need 0.15 A. Set V.',lock:{r1:100},I:0.15},
+{topo:'simple',t:'พัดลมต้องการกระแส 0.2 A ปรับ V และ R เองได้อิสระ (ตอบได้หลายคู่)',te:'The fan needs 0.2 A. V and R are free (many pairs work).',lock:{},I:0.2},
+{topo:'series',t:'อนุกรม R₁ = 100 Ω ล็อก ที่ 12 V ต้องการกระแส 0.04 A ตั้ง R₂',te:'Series: R₁ = 100 Ω locked, 12 V, need 0.04 A. Set R₂.',lock:{v:12,r1:100},I:0.04},
+{topo:'parallel',t:'ขนาน R₁ = 200 Ω ที่ 12 V ต้องการกระแสรวม 0.12 A ตั้ง R₂',te:'Parallel: R₁ = 200 Ω, 12 V, total current 0.12 A. Set R₂.',lock:{v:12,r1:200},I:0.12},
+{topo:'mixed',t:'R₁ = 100 Ω ต่ออนุกรมกับ R₂, R₃ (200 Ω ขนานกัน) ล็อกทั้งหมด ต้องการกระแสรวม 0.09 A ตั้ง V',te:'R₁ = 100 Ω in series with R₂ ∥ R₃ (200 Ω each), all locked. Need 0.09 A. Set V.',lock:{r1:100,r2:200,r3:200},I:0.09}];
+let mis=ld('ohmMissionsV2',null);if(!Array.isArray(mis)||!mis.length)mis=clone(DEFM);
+let phase='idle',topo='simple',mi=0,on=false,blown=false,busy=false,sec=0,tot=0,timer=null,fb='',fbk='',hintUsed=false,blows=0;
+let teamMode=false,teamN=2,teamNames=['ทีม 1','ทีม 2','ทีม 3','ทีม 4'],scores=[],cur=0,tries=0;
+const TT=(a,b)=>lang==='en'?b:a;
+const TOPOS=['simple','series','parallel','mixed'],cap=s=>s[0].toUpperCase()+s.slice(1);
+function calc(){
+ const v=+$('sv').value,r1=+$('sr1').value,r2=+$('sr2').value,r3=+$('sr3').value;let req,c;
+ if(topo==='simple')req=r1;else if(topo==='series')req=r1+r2;else if(topo==='parallel')req=r1*r2/(r1+r2);else req=r1+r2*r3/(r2+r3);
+ const I=v/req;
+ if(topo==='simple')c=[{n:'R',r:r1,v,i:I}];
+ else if(topo==='series')c=[{n:'R₁',r:r1,v:I*r1,i:I},{n:'R₂',r:r2,v:I*r2,i:I}];
+ else if(topo==='parallel')c=[{n:'R₁',r:r1,v,i:v/r1},{n:'R₂',r:r2,v,i:v/r2}];
+ else{const v1=I*r1,vp=v-v1;c=[{n:'R₁',r:r1,v:v1,i:I},{n:'R₂',r:r2,v:vp,i:vp/r2},{n:'R₃',r:r3,v:vp,i:vp/r3}]}
+ return{v,req,I,c};
+}
+const mtext=m=>lang==='en'&&m.te?m.te:m.t;
+function setSliders(l){l=l||{};$('sv').value=l.v??5;$('sr1').value=l.r1??500;$('sr2').value=l.r2??500;$('sr3').value=l.r3??500}
+function renderGame(){
+ const play=phase==='play',m=play?mis[mi]:null,lk=m?m.lock||{}:{};
+ [['sv','v','lkv'],['sr1','r1','lk1'],['sr2','r2','lk2'],['sr3','r3','lk3']].forEach(([id,k,l])=>{
+  const lockd=play&&lk[k]!==undefined;$(id).disabled=lockd||(play&&busy)||phase==='done'||phase==='lose';$(l).textContent=lockd?t('locked'):'';
+ });
+ $('w2').hidden=topo==='simple';$('w3').hidden=topo!=='mixed';$('nr1').textContent=topo==='simple'?'R':'R₁';
+ $('topoBar').innerHTML=phase==='idle'?TOPOS.map(k=>'<button class="chip'+(k===topo?' on':'')+'" data-topo="'+k+'" type="button">'+t('t'+cap(k))+'</button>').join(''):'';
+ $('pw').disabled=!play||busy;$('hb').disabled=!play||busy;$('pw').hidden=$('hb').hidden=!play;$('rs').hidden=$('ex').hidden=!play;$('rs').textContent=TT('↻ เริ่มใหม่ตั้งแต่ข้อ 1','↻ Restart from #1');$('ex').textContent=TT('✕ ออกจากเกม','✕ Quit');
+ $('pw').textContent=on?t('pOff'):t('pOn');$('pw').classList.toggle('live',on);
+ const s=calc(),show=!play||(on&&!blown);
+ $('lv').textContent=s.v+' V';$('lr1').textContent=$('sr1').value+' Ω';$('lr2').textContent=$('sr2').value+' Ω';$('lr3').textContent=$('sr3').value+' Ω';
+ $('rv').textContent=s.v;$('rr').textContent=fN(s.req,1);$('ri').textContent=show?fA(s.I):'?';$('rp').textContent=show?fN(s.v*s.I,3):'?';
+ $('detail').innerHTML=show?s.c.map(c=>'<div><b>'+c.n+'</b> = '+c.r+' Ω · V = '+fN(c.v,2)+' V · I = '+fA(c.i)+' A</div>').join(''):'';
+ $('rule').textContent=t('r'+cap(topo));
+ let h='';
+ if(phase==='idle')h='<p class="eb">'+t('idleH')+'</p><p>'+t('idleP')+'</p><button class="btn main" id="startBtn" type="button">'+t('startB')+' ('+mis.length+')</button>';
+ else if(play)h='<p class="eb">'+t('mTitle')+' '+(mi+1)+' / '+mis.length+'</p><h3>'+esc(mtext(m))+'</h3><p style="color:var(--amber)">'+t('goal')+': I = '+fA(m.I)+' A · '+t('fuseTxt')+'</p><p class="note '+fbk+'">'+esc(fb)+'</p><div class="bar"><i style="width:'+(mi/mis.length*100)+'%;background:var(--green)"></i></div>';
+ else if(phase==='done'){const st=sec>=tot*.5?3:sec>=tot*.25?2:1;h='<p class="eb">'+t('doneH')+'</p><p class="stars">'+'★'.repeat(st)+'☆'.repeat(3-st)+'</p><p class="mut">⏱ '+sec+' s · ⚡ '+blows+'</p><button class="btn main" id="startBtn" type="button">'+t('again')+'</button>'}
+ else h='<p class="eb" style="color:var(--red)">'+t('loseH')+'</p><button class="btn main" id="startBtn" type="button">'+t('again')+'</button>';
+ if(phase==='idle')h=modeUI()+h;else if(teamMode)h+=teamBoard();$('mcard').innerHTML=h;
+ $('clock').textContent=play||phase==='done'||phase==='lose'?String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'):'';
+}
+function teamWrong(){if(!teamMode)return;tries++;if(tries>=2){busy=true;fb+=' · '+TT('หมดสิทธิ์ ข้ามข้อ','No tries left');setTimeout(()=>{mi++;cur=(cur+1)%teamN;if(mi>=mis.length){clearInterval(timer);phase='done';on=false;renderGame()}else loadM()},1400)}}
+function modeUI(){let h='<div class="row" style="margin:0 0 8px"><button class="chip'+(!teamMode?' on':'')+'" data-m="solo" type="button">👤 '+TT('เล่นเดี่ยว','Solo')+'</button><button class="chip'+(teamMode?' on':'')+'" data-m="team" type="button">👥 '+TT('เล่นเป็นทีม','Teams')+'</button></div>';
+ if(teamMode)h+='<div class="row" style="margin:0 0 6px">'+[2,3,4].map(n=>'<button class="chip'+(n===teamN?' on':'')+'" data-tn="'+n+'" type="button">'+n+' '+TT('ทีม','teams')+'</button>').join('')+'</div>'+teamNames.slice(0,teamN).map((n,i)=>'<input data-nm="'+i+'" value="'+esc(n)+'" maxlength="20" aria-label="team '+(i+1)+'" style="margin-bottom:6px">').join('')+'<p class="mut" style="font-size:.85rem">'+TT('แต่ละทีมใช้เครื่องเดียวช่วยกันคิด ผลัดกันตอบทีละข้อ (ตอบได้ 2 ครั้ง/ข้อ ถูก +10 คะแนน)','One device per team, take turns per mission (2 tries each, +10 per correct)')+'</p>';
+ return h}
+function teamBoard(){const n=teamN,mx=Math.max(...scores),end=phase!=='play';let h='<div class="ed" style="margin-top:10px">';
+ for(let i=0;i<n;i++){const lead=mx>0&&scores[i]===mx,now=phase==='play'&&i===cur;h+='<div class="row" style="margin:4px 0;'+(now?'font-weight:800;color:var(--amber)':'')+'"><span style="font-size:1.4rem">'+(lead?(end?'🏆':'🔥'):'🏃')+'</span><span style="flex:1">'+(now?'▶ ':'')+esc(teamNames[i])+'</span><b class="clock">'+scores[i]+'</b></div>'}
+ if(end){const w=teamNames.slice(0,n).filter((_,i)=>scores[i]===mx);h+='<p class="note ok">🏆 '+(mx===0?TT('ไม่มีผู้ชนะ','No winner'):w.length>1?TT('เสมอ: ','Tie: ')+w.map(x=>esc(x)).join(', '):TT('ผู้ชนะ: ','Winner: ')+esc(w[0]))+'</p><button class="btn" id="newMs" type="button">⚙ '+TT('สร้างโจทย์ใหม่ / ตั้งทีมใหม่','New missions / teams')+'</button>'}
+ return h+'</div>'}
+$('mcard').oninput=e=>{const i=e.target.dataset.nm;if(i!==undefined)teamNames[+i]=e.target.value};
+$('mcard').onclick=e=>{const b=e.target.closest('[data-m],[data-tn],#startBtn,#newMs');if(!b)return;
+ if(b.dataset.m){teamMode=b.dataset.m==='team';renderGame()}else if(b.dataset.tn){teamN=+b.dataset.tn;renderGame()}
+ else if(b.id==='newMs'){phase='idle';on=false;clearInterval(timer);if(!mEdOpen)$('mEdBtn').click();renderGame();$('mEd').scrollIntoView({behavior:'smooth'})}else startGame()};
+$('topoBar').onclick=e=>{const b=e.target.closest('[data-topo]');if(b){topo=b.dataset.topo;renderGame()}};
+function startGame(){clearInterval(timer);mi=0;blows=0;scores=teamNames.slice(0,teamN).map(()=>0);cur=0;tries=0;tot=mis.length*45;sec=tot;phase='play';loadM();timer=setInterval(()=>{if(phase!=='play')return;sec--;if(sec<=0){sec=0;clearInterval(timer);phase='lose';on=false}renderGame()},1000)}
+function loadM(){const m=mis[mi];topo=m.topo;setSliders(m.lock);on=false;blown=false;busy=false;hintUsed=false;tries=0;fb='';fbk='';renderGame()}
+function pen(n){sec=Math.max(0,sec-n)}
+$('pw').onclick=()=>{
+ if(phase!=='play'||busy)return;if(on){on=false;renderGame();return}
+ on=true;const m=mis[mi],s=calc();
+ if(s.I>FUSE){blown=true;busy=true;blows++;fb=t('blown')+' (I = '+fA(s.I)+' A)';fbk='no';pen(6);setTimeout(()=>{blown=false;on=false;busy=false;renderGame()},1600)}
+ else if(Math.abs(s.I-m.I)<=m.I*.03){busy=true;if(teamMode)scores[cur]+=10;fb=t('ok')+' I = '+fA(s.I)+' A';fbk='ok';setTimeout(()=>{mi++;if(teamMode)cur=(cur+1)%teamN;if(mi>=mis.length){clearInterval(timer);phase='done';on=false;renderGame()}else loadM()},1500)}
+ else{fb=(s.I<m.I?t('tooLow'):t('tooHigh'))+': I = '+fA(s.I)+' A ≠ '+fA(m.I)+' A';fbk='no';pen(2);teamWrong()}
+ renderGame();
+};
+$('hb').onclick=()=>{if(phase!=='play')return;if(!hintUsed){hintUsed=true;pen(5)}const m=mis[mi],lk=m.lock||{};
+ fb=lk.v!==undefined?t('hintA')+' '+fN(lk.v/m.I,1)+' Ω':(lk.r1!==undefined&&(topo==='simple'||lk.r2!==undefined)&&(topo!=='mixed'||lk.r3!==undefined)&&topo!=='parallel')?t('hintB')+' '+fN(m.I*calc().req,2)+' V':t('hintC');fbk='';renderGame()};
+['sv','sr1','sr2','sr3'].forEach(id=>$(id).oninput=()=>{if(phase==='play'&&on&&!busy)on=false;renderGame()});
+/* mission editor */
+let mEdOpen=false;
+$('mEdBtn').onclick=()=>{mEdOpen=!mEdOpen;$('mEd').hidden=!mEdOpen;if(mEdOpen)renderMEd()};
+function renderMEd(){
+ $('mEd').innerHTML='<div class="row"><button class="btn main" data-a="add" type="button">'+t('addM')+'</button><button class="btn" data-a="save" type="button">'+t('save')+'</button><button class="btn" data-a="reset" type="button">'+t('reset')+'</button></div>'+mis.map((m,i)=>'<div class="ed"><div class="row" style="margin:0"><b>#'+(i+1)+'</b><button class="btn" data-a="del" data-i="'+i+'" type="button">'+t('delB')+'</button></div><label>'+t('mText')+'<textarea data-i="'+i+'" data-f="t">'+esc(mtext(m))+'</textarea></label><label>'+t('mTopo')+'<select data-i="'+i+'" data-f="topo">'+TOPOS.map(k=>'<option value="'+k+'"'+(m.topo===k?' selected':'')+'>'+t('t'+cap(k))+'</option>').join('')+'</select></label><label>'+t('mLock')+'</label><div class="f4">'+['v','r1','r2','r3'].map(k=>'<input type="number" step="any" placeholder="'+k.toUpperCase()+'" data-i="'+i+'" data-f="lock.'+k+'" value="'+((m.lock||{})[k]??'')+'">').join('')+'<input type="number" step="any" min="0.001" max="0.3" data-i="'+i+'" data-f="I" value="'+m.I+'" title="'+t('mTarget')+'" placeholder="I (A)"></div><small class="mut">'+t('mTarget')+' = '+t('goal')+'</small></div>').join('');
+}
+$('mEd').addEventListener('input',e=>{const el=e.target,i=el.dataset.i,f=el.dataset.f;if(i===undefined||!f)return;const m=mis[+i];
+ if(f==='t'){m.t=el.value;m.te=undefined}else if(f==='topo')m.topo=el.value;else if(f==='I')m.I=Math.max(.001,+el.value||.05);
+ else{m.lock=m.lock||{};const k=f.split('.')[1];if(el.value==='')delete m.lock[k];else m.lock[k]=+el.value}});
+$('mEd').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
+ if(a==='add')mis.push({topo:'simple',t:t('newMs'),lock:{v:12},I:0.1});
+ if(a==='del'&&mis.length>1&&confirm(t('conf')))mis.splice(+b.dataset.i,1);
+ if(a==='reset'){if(!confirm(t('confirmReset')))return;mis=clone(DEFM);sv('ohmMissionsV2',null)}
+ if(a==='save'){sv('ohmMissionsV2',mis);toast(t('saved'));clearInterval(timer);phase='idle';on=false;renderGame();return}
+ renderMEd()});
+
+/* ================= QUIZ ================= */
+const DEFQ=[
+{q:'ข้อใดคือใจความสำคัญของกฎของโอห์ม?',qe:'What is the key idea of Ohm’s law?',o:['I แปรผันตรงกับ V และแปรผกผันกับ R','I แปรผันตรงกับ R และแปรผกผันกับ V','V แปรผันตรงกับทั้ง I และ R พร้อมกัน','R เปลี่ยนตาม I ตลอดเวลา'],oe:['I is directly proportional to V and inversely to R','I is directly proportional to R and inversely to V','V is proportional to both I and R at once','R always changes with I'],a:0,e:'จาก I = V/R',ee:'From I = V/R.'},
+{q:'V = 12 V, R = 400 Ω กระแสเท่าใด?',qe:'V = 12 V and R = 400 Ω. What is the current?',o:['0.03 A','0.30 A','4.80 A','3.33 A'],oe:null,a:0,e:'I = 12 ÷ 400 = 0.03 A',ee:'I = 12 ÷ 400 = 0.03 A'},
+{q:'เพิ่ม R โดย V คงที่ กระแสจะเป็นอย่างไร?',qe:'If R increases while V is constant, what happens to I?',o:['เพิ่มขึ้น','เท่าเดิม','ลดลง','เพิ่มเป็นสองเท่า'],oe:['Increases','Stays the same','Decreases','Doubles'],a:2,e:'I = V ÷ R จึงลดลง',ee:'I = V ÷ R, so I decreases.'},
+{q:'เครื่องมือใดต่ออนุกรมเพื่อวัดกระแส?',qe:'Which instrument is connected in series to measure current?',o:['โวลต์มิเตอร์','แอมมิเตอร์','โอห์มมิเตอร์','เทอร์โมมิเตอร์'],oe:['Voltmeter','Ammeter','Ohmmeter','Thermometer'],a:1,e:'แอมมิเตอร์ต่ออนุกรม โวลต์มิเตอร์ต่อขนาน',ee:'Ammeter in series; voltmeter in parallel.'},
+{q:'100 Ω สองตัวต่อขนาน R รวมเท่าใด?',qe:'Two 100 Ω resistors in parallel. Equivalent R?',o:['200 Ω','100 Ω','50 Ω','25 Ω'],oe:null,a:2,e:'(100×100)÷200 = 50 Ω',ee:'(100×100)÷200 = 50 Ω'}];
+let store=ld('ohmQuizSetsV2',null);
+if(!store||!Array.isArray(store.sets)||!store.sets.length)store={cur:0,sets:[{name:'ชุดเริ่มต้น / Default',def:1,qs:clone(DEFQ)}]};
+let qEdOpen=false;const cs=()=>store.sets[store.cur];
+const qq=q=>lang==='en'&&q.qe?q.qe:q.q,qo=q=>lang==='en'&&q.oe&&q.oe.length===q.o.length?q.oe:q.o,qx=q=>lang==='en'&&q.ee?q.ee:q.e;
+function saveStore(){sv('ohmQuizSetsV2',store)}
+function renderQuiz(){
+ $('setSel').innerHTML=store.sets.map((s,i)=>'<option value="'+i+'"'+(i===store.cur?' selected':'')+'>'+esc(s.name)+'</option>').join('');
+ $('qTitle').textContent=(lang==='en'?'Exercises':'แบบฝึกหัด')+' ('+cs().qs.length+')';$('qscore').textContent='';
+ $('qbox').innerHTML=cs().qs.map((q,n)=>'<div class="ed"><h3>'+t('qNo')+' '+(n+1)+': '+esc(qq(q))+'</h3>'+qo(q).map((o,k)=>'<label class="opt"><input type="radio" style="width:auto" name="q'+n+'" value="'+k+'"><span>'+esc(o)+'</span></label>').join('')+'<div class="exp" id="ex'+n+'"><b>'+t('ans')+'</b> '+esc(qx(q))+'</div></div>').join('');
+ if(qEdOpen)renderQEd();
+ if(qLocked){lockQuiz();$('qscore').textContent='🔒'}
+}
+let qLocked=false;
+function showScore(s,n){const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);display:grid;place-items:center;z-index:99';
+ d.innerHTML='<div class="card" style="text-align:center;min-width:270px"><p class="eb">'+(lang==='en'?'YOUR SCORE':'คะแนนของคุณ')+'</p><h1 style="font-size:3.4rem;margin:.2em 0">'+s+' / '+n+'</h1><input placeholder="'+(lang==='en'?'Name / No.':'ชื่อ - เลขที่')+'" style="margin:6px 0"><p class="mut">'+(lang==='en'?'Show this to your teacher.':'แสดงหน้าจอนี้ให้ครูจดคะแนน')+'</p><button class="btn main" type="button">OK</button></div>';
+ d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
+function lockQuiz(){document.querySelectorAll('#qbox input').forEach(i=>i.disabled=true);$('qCheck').disabled=true}
+$('qCheck').onclick=()=>{if(qLocked)return;let s=0;const qs=cs().qs;qs.forEach((q,n)=>{const ins=document.querySelectorAll('input[name=q'+n+']'),sel=document.querySelector('input[name=q'+n+']:checked');$('ex'+n).style.display='block';ins[q.a]&&ins[q.a].closest('.opt').classList.add('good');if(sel&&+sel.value===q.a)s++;else if(sel)sel.closest('.opt').classList.add('bad')});
+ $('qscore').textContent=t('score')+' '+s+' / '+qs.length;qLocked=true;lockQuiz();showScore(s,qs.length);window.OHMDB&&OHMDB.submit('quiz',cs().name||'ชุดข้อสอบ',s,qs.length)};
+$('qRetry').onclick=()=>{if(qLocked){const p=prompt(lang==='en'?'Teacher PIN (default 1234)':'รหัสครู (ค่าเริ่มต้น 1234)');if(p!==String(ld('ohmPin','1234')))return}qLocked=false;$('qCheck').disabled=false;renderQuiz()};
+$('setSel').onchange=e=>{store.cur=+e.target.value;saveStore();renderQuiz()};
+$('setNew').onclick=()=>{store.sets.push({name:t('newSetName')+' '+(store.sets.length+1),qs:[{q:t('newQ'),o:['A','B','C','D'].map(x=>t('choice')+' '+x),a:0,e:''}]});store.cur=store.sets.length-1;saveStore();qEdOpen=true;$('qEd').hidden=false;renderQuiz()};
+$('qEdBtn').onclick=()=>{qEdOpen=!qEdOpen;$('qEd').hidden=!qEdOpen;if(qEdOpen)renderQEd()};
+function renderQEd(){
+ const s=cs();
+ $('qEd').innerHTML='<div class="ed"><label>'+t('setName')+'<input data-f="name" value="'+esc(s.name)+'"></label><div class="row"><button class="btn main" data-a="addq" type="button">'+t('addQ')+'</button><button class="btn" data-a="save" type="button">'+t('save')+'</button><button class="btn" data-a="delset" type="button">'+t('delSet')+'</button><button class="btn" data-a="resetall" type="button">'+t('resetAll')+'</button></div></div>'+s.qs.map((q,i)=>'<div class="ed"><div class="row" style="margin:0"><b>'+t('qNo')+' '+(i+1)+'</b><button class="btn" data-a="delq" data-i="'+i+'" type="button">'+t('delB')+'</button></div><label>'+t('q')+'<textarea data-i="'+i+'" data-f="q">'+esc(q.q)+'</textarea></label>'+q.o.map((o,k)=>'<label>'+t('choice')+' '+(k+1)+'<input data-i="'+i+'" data-f="o" data-k="'+k+'" value="'+esc(o)+'"></label>').join('')+'<label>'+t('correct')+'<select data-i="'+i+'" data-f="a">'+q.o.map((o,k)=>'<option value="'+k+'"'+(q.a===k?' selected':'')+'>'+(k+1)+'</option>').join('')+'</select></label><label>'+t('expl')+'<textarea data-i="'+i+'" data-f="e">'+esc(q.e||'')+'</textarea></label></div>').join('');
+}
+$('qEd').addEventListener('input',e=>{const el=e.target,f=el.dataset.f;if(!f)return;if(f==='name'){cs().name=el.value;return}const q=cs().qs[+el.dataset.i];if(!q)return;
+ if(f==='o'){q.o[+el.dataset.k]=el.value;q.oe=null}else if(f==='a')q.a=+el.value;else{q[f]=el.value;q[f+'e']=undefined;if(f==='q')q.qe=undefined;if(f==='e')q.ee=undefined}});
+$('qEd').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,s=cs();
+ if(a==='addq')s.qs.push({q:t('newQ'),o:['A','B','C','D'].map(x=>t('choice')+' '+x),a:0,e:''});
+ if(a==='delq'&&s.qs.length>1)s.qs.splice(+b.dataset.i,1);
+ if(a==='delset'){if(store.sets.length<2||!confirm(t('conf')))return;store.sets.splice(store.cur,1);store.cur=0;saveStore();renderQuiz();return}
+ if(a==='resetall'){if(!confirm(t('confirmReset')))return;store={cur:0,sets:[{name:'ชุดเริ่มต้น / Default',def:1,qs:clone(DEFQ)}]};try{localStorage.removeItem('ohmQuizSetsV2')}catch(x){}renderQuiz();return}
+ if(a==='save'){s.qs.forEach(q=>{if(!q.q.trim())q.q=t('newQ');q.o=q.o.map(o=>o.trim()||'—')});saveStore();renderQuiz();toast(t('saved'));return}
+ renderQEd()});
+
+/* ================= LAB ================= */
+const BW=1400,BH=700;
+const svg=$('board'),SN='http://www.w3.org/2000/svg';
+let comps=[],wires=[],cid=1,wid=1,selC=null,selW=null,wStart=null,powered=false,drag=null,mouse=null,wp=[];const sn=q=>({x:Math.round(q.x/25)*25,y:Math.round(q.y/25)*25});addEventListener('keydown',e=>{if(e.key==='Escape'&&wStart){wStart=null;wp=[];renderLab()}});
+const PARTS=['battery','resistor','bulb','switch','voltmeter','ammeter'],DEFV={battery:{v:9},resistor:{r:100},bulb:{r:40,vr:6},switch:{closed:true},voltmeter:{},ammeter:{}};
+const ICON={battery:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#666"/><stop offset="1" stop-color="#111"/></linearGradient><linearGradient id="go" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#c77d00"/></linearGradient></defs><rect x="2" y="14" width="3" height="8" rx="1" fill="#bbb"/><rect x="5" y="9" width="38" height="18" rx="4" fill="url(#gb)"/><rect x="43" y="9" width="14" height="18" rx="3" fill="url(#go)"/><rect x="57" y="15" width="5" height="6" rx="1" fill="#ddd"/><rect x="10" y="12" width="24" height="3" rx="1.5" fill="#fff" opacity=".25"/></svg>',resistor:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><line x1="2" y1="18" x2="62" y2="18" stroke="#c4a35a" stroke-width="3" stroke-linecap="round"/><rect x="14" y="8" width="36" height="20" rx="9" fill="#e2c391" stroke="#8a5a1f" stroke-width="1.5"/><rect x="21" y="8" width="4" height="20" fill="#7a3b12"/><rect x="29" y="8" width="4" height="20" fill="#111"/><rect x="37" y="8" width="4" height="20" fill="#d22244"/><rect x="44" y="9" width="3" height="18" fill="#d4a017"/></svg>',bulb:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><defs><radialGradient id="gg"><stop offset="0" stop-color="#fffbe0"/><stop offset="1" stop-color="#ffd966"/></radialGradient></defs><circle cx="32" cy="14" r="12" fill="url(#gg)" stroke="#d8b94a" stroke-width="2"/><path d="M26 21q3-10 6-2q3-8 6 2" fill="none" stroke="#a66a00" stroke-width="1.6"/><rect x="26" y="25" width="12" height="8" rx="2" fill="#9aa7b0"/><line x1="26" y1="29" x2="38" y2="29" stroke="#667" stroke-width="1"/></svg>',switch:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><line x1="2" y1="26" x2="18" y2="26" stroke="#c4a35a" stroke-width="3" stroke-linecap="round"/><line x1="46" y1="26" x2="62" y2="26" stroke="#c4a35a" stroke-width="3" stroke-linecap="round"/><rect x="12" y="29" width="40" height="5" rx="2" fill="#6f7f8a"/><circle cx="18" cy="26" r="4" fill="#9aa7b0"/><circle cx="46" cy="26" r="4" fill="#9aa7b0"/><line x1="18" y1="26" x2="42" y2="10" stroke="#7be0b0" stroke-width="4" stroke-linecap="round"/></svg>',voltmeter:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><rect x="12" y="3" width="40" height="30" rx="7" fill="#f08a00" stroke="#222" stroke-width="2"/><rect x="18" y="8" width="28" height="14" rx="3" fill="#fff"/><text x="32" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#222" font-family="sans-serif">V</text><circle cx="22" cy="28" r="2" fill="#222"/><circle cx="42" cy="28" r="2" fill="#222"/></svg>',ammeter:'<svg viewBox="0 0 64 36" width="60" height="34" aria-hidden="true"><rect x="12" y="3" width="40" height="30" rx="7" fill="#f08a00" stroke="#222" stroke-width="2"/><rect x="18" y="8" width="28" height="14" rx="3" fill="#fff"/><text x="32" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#222" font-family="sans-serif">A</text><circle cx="22" cy="28" r="2" fill="#222"/><circle cx="42" cy="28" r="2" fill="#222"/></svg>'};
+function buildPalette(){$('pal').innerHTML=PARTS.map(p=>'<button class="btn" data-add="'+p+'" type="button">'+ICON[p]+' '+t(p)+'</button>').join('');$('labPower').textContent=t(powered?'pOff':'pOn');$('labDir').textContent=t(elec?'dirE':'dirC')}
+$('pal').onclick=e=>{const b=e.target.closest('[data-add]');if(!b)return;if(pdone){pdone=false;return}const n=comps.length;addC(b.dataset.add,170+(n%8)*160,150+Math.floor(n/8)*170)};
+let pd=null,pdone=false;
+$('pal').addEventListener('pointerdown',e=>{pdone=false;const b=e.target.closest('[data-add]');if(b)pd=b.dataset.add});
+document.addEventListener('pointermove',e=>{if(!pd)return;const r=svg.getBoundingClientRect();if(e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom){const q=pt(e);addC(pd,q.x,q.y);const c=comps[comps.length-1];drag={id:c.id,dx:0,dy:0};pd=null;pdone=true}});
+document.addEventListener('pointerup',()=>{pd=null});
+function addC(type,x,y){const c={id:cid++,type,x:Math.max(60,Math.min(BW-60,x)),y:Math.max(55,Math.min(BH-60,y)),rot:0,...clone(DEFV[type])};comps.push(c);selC=c.id;selW=null;powered=false;renderLab()}
+const fc=id=>comps.find(c=>c.id===id);
+function tp(key){const[id,s]=key.split(':'),c=fc(+id);if(!c)return null;const d=s==='1'?50:-50,r=c.rot*Math.PI/180;return{x:c.x+d*Math.cos(r),y:c.y+d*Math.sin(r)}}
+const resOf=c=>c.type==='ammeter'?.01:c.type==='voltmeter'?1e7:Math.max(.1,+c.r||1);
+function lin(A,b){const n=b.length,M=A.map((r,i)=>[...r,b[i]]);for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;if(Math.abs(M[p][c])<1e-15)return null;[M[p],M[c]]=[M[c],M[p]];const d=M[c][c];for(let j=c;j<=n;j++)M[c][j]/=d;for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c];if(f)for(let j=c;j<=n;j++)M[r][j]-=f*M[c][j]}}return M.map(r=>r[n])}
+function solve(){
+ if(!comps.length)return{err:'msgEmpty'};
+ const keys=[];comps.forEach(c=>keys.push(c.id+':0',c.id+':1'));const par={};keys.forEach(k=>par[k]=k);
+ const f=k=>{while(par[k]!==k){par[k]=par[par[k]];k=par[k]}return k},j=(a,b)=>{par[f(a)]=f(b)};
+ wires.forEach(w=>{if(w.a in par&&w.b in par)j(w.a,w.b)});comps.forEach(c=>{if(c.type==='switch'&&c.closed)j(c.id+':0',c.id+':1')});
+ const idx={};let n=0;keys.forEach(k=>{const r=f(k);if(!(r in idx))idx[r]=n++});const nd=k=>idx[f(k)];
+ const br=[],src=[];
+ comps.forEach(c=>{const a=nd(c.id+':0'),b=nd(c.id+':1');if(c.type==='battery')src.push({a,b,v:+c.v||0,c:c.id});else if(c.type!=='switch')br.push({a,b,g:1/resOf(c)})});
+ if(!src.length)return{err:'msgNoBat'};
+ if(src.some(s=>s.a===s.b&&s.v))return{err:'msgShort',short:1};
+ const gnd=src[0].a,vars=[];for(let i=0;i<n;i++)if(i!==gnd)vars.push(i);const mp=new Map(vars.map((v,i)=>[v,i])),N=vars.length+src.length;
+ const A=Array.from({length:N},()=>Array(N).fill(0)),z=Array(N).fill(0);
+ vars.forEach((v,i)=>A[i][i]+=1e-9);
+ br.forEach(x=>{if(x.a!==gnd)A[mp.get(x.a)][mp.get(x.a)]+=x.g;if(x.b!==gnd)A[mp.get(x.b)][mp.get(x.b)]+=x.g;if(x.a!==gnd&&x.b!==gnd){A[mp.get(x.a)][mp.get(x.b)]-=x.g;A[mp.get(x.b)][mp.get(x.a)]-=x.g}});
+ src.forEach((s,k)=>{const col=vars.length+k;if(s.b!==gnd){A[mp.get(s.b)][col]+=1;A[col][mp.get(s.b)]+=1}if(s.a!==gnd){A[mp.get(s.a)][col]-=1;A[col][mp.get(s.a)]-=1}z[col]=s.v});
+ const sol=lin(A,z);if(!sol)return{err:'msgOpen'};
+ const vo=Array(n).fill(0);vars.forEach((v,i)=>vo[v]=sol[i]);
+ let I=Math.abs(sol[vars.length]);if(I<1e-6)I=0;const Vs=Math.abs(src[0].v);
+ return{ok:1,srcI:src.map((s,k)=>({id:s.c,i:-sol[vars.length+k]})),vo,nd,I,Vs,P:Vs*I,R:I?Vs/I:Infinity};
+}
+const vc=(s,c)=>Math.abs(s.vo[s.nd(c.id+':0')]-s.vo[s.nd(c.id+':1')]);
+function drawPart(c,s){
+ const sel=selC===c.id;let g='<g data-c="'+c.id+'" transform="translate('+c.x+' '+c.y+') rotate('+c.rot+') scale(1.25)" style="cursor:move"><rect x="-48" y="-30" width="96" height="60" rx="10" fill="'+(sel?'#173b4e':'#0d2638')+'" stroke="'+(sel?'#ffb938':'#36576b')+'" stroke-width="2"/>';
+ const L='<line x1="-40" y1="0" x2="-22" y2="0" stroke="#d8e7ee" stroke-width="4"/><line x1="22" y1="0" x2="40" y2="0" stroke="#d8e7ee" stroke-width="4"/>';
+ if(c.type==='battery')g+='<rect x="-40" y="-5" width="7" height="10" fill="#aaa"/><rect x="-34" y="-13" width="50" height="26" rx="3" fill="#1d1d1d"/><rect x="16" y="-13" width="24" height="26" rx="3" fill="#e8a021"/><text x="-9" y="5" text-anchor="middle" fill="#ddd" font-size="12">'+c.v+' V</text><text x="28" y="5" text-anchor="middle" fill="#222" font-size="14" font-weight="700">+</text>';
+ else if(c.type==='resistor')g+=L+'<rect x="-28" y="-10" width="56" height="20" rx="9" fill="#d9b98a" stroke="#6b4a1f" stroke-width="2"/><rect x="-18" y="-10" width="5" height="20" fill="#7a3b12"/><rect x="-8" y="-10" width="5" height="20" fill="#111"/><rect x="2" y="-10" width="5" height="20" fill="#d24"/><rect x="16" y="-10" width="5" height="20" fill="#d4a017"/>';
+ else if(c.type==='bulb'){const b=Math.min(bright[c.id]||0,1);g+=L+'<circle data-bg="'+c.id+'" r="30" fill="url(#bGlow)" opacity="0" pointer-events="none"/><circle data-bf="'+c.id+'" r="20" fill="'+(b>.02?'rgb(255,'+Math.round(200+55*b)+','+Math.round(90+120*b)+')':'#193449')+'" stroke="'+(b>.02?'#fff1b5':'#7f9aaa')+'" stroke-width="3"'+(b>.02?' style="filter:drop-shadow(0 0 '+Math.round(4+14*b)+'px #ffd66e)"':'')+'/><path d="M-8 6Q-4-10 0 3Q4-10 8 6" fill="none" stroke="#664500" stroke-width="2.5"/>'}
+ else if(c.type==='switch')g+='<line x1="-40" y1="0" x2="-14" y2="0" stroke="#d8e7ee" stroke-width="4"/><line x1="14" y1="0" x2="40" y2="0" stroke="#d8e7ee" stroke-width="4"/><circle cx="-14" r="4" fill="#d8e7ee"/><circle cx="14" r="4" fill="#d8e7ee"/><line x1="-14" y1="0" x2="'+(c.closed?14:8)+'" y2="'+(c.closed?0:-17)+'" stroke="'+(c.closed?'#7be0b0':'#ff8a80')+'" stroke-width="4" stroke-linecap="round"/>';
+ else g+=L+'<rect x="-27" y="-19" width="54" height="38" rx="8" fill="#f08a00" stroke="#222" stroke-width="3"/><rect x="-19" y="-11" width="38" height="22" rx="3" fill="#fff"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="#222">'+(c.type==='voltmeter'?'V':'A')+'</text>';
+ g+='</g>';
+ let lbl=t(c.type);if(c.type==='battery')lbl+=' '+c.v+' V';if(c.type==='resistor'||c.type==='bulb')lbl+=' '+c.r+' Ω';
+ g+='<text x="'+c.x+'" y="'+(c.y+66)+'" text-anchor="middle" fill="#10222e" font-size="13" font-weight="600">'+esc(lbl)+'</text>';
+ if(s&&s.ok&&powered&&c.type!=='battery'&&c.type!=='switch'){const v=vc(s,c);g+='<text x="'+c.x+'" y="'+(c.y-50)+'" text-anchor="middle" fill="#0b3b66" font-size="13" font-weight="700">'+fN(v,2)+' V'+(c.type==='voltmeter'?'':' · '+fA(v/resOf(c))+' A')+'</text>'}
+ return g;
+}
+function renderBoard(s){
+ let h='<defs><radialGradient id="bGlow"><stop offset="0" stop-color="#ffd66e" stop-opacity=".9"/><stop offset="1" stop-color="#ffb938" stop-opacity="0"/></radialGradient><pattern id="gr" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#8fb0ee" stroke-width="1"/></pattern></defs><rect width="1400" height="700" fill="url(#gr)"/>';
+ wires.forEach(w=>{const a=tp(w.a),b=tp(w.b);if(a&&b)h+='<polyline data-w="'+w.id+'" class="wire'+(powered&&s&&s.ok?' live':'')+(selW===w.id?' sel':'')+'" points="'+[a,...(w.p||[]),b].map(q=>q.x+','+q.y).join(' ')+'"/>'});
+ if(wStart&&mouse){const a=tp(wStart);if(a)h+='<polyline fill="none" points="'+[a,...wp,mouse].map(q=>q.x+','+q.y).join(' ')+'" stroke="#ffb938" stroke-width="3" stroke-dasharray="7 6" pointer-events="none"/>'}
+ comps.forEach(c=>{h+=drawPart(c,s)});
+ comps.forEach(c=>[0,1].forEach(k=>{const key=c.id+':'+k,p=tp(key);h+='<circle data-t="'+key+'" class="term'+(wStart===key?' s':'')+'" cx="'+p.x+'" cy="'+p.y+'" r="20"/>'}));
+ if(!comps.length)h+='<text x="700" y="350" text-anchor="middle" fill="#2a4a7a" font-size="20">'+esc(t('msgEmpty'))+'</text>';
+ svg.innerHTML=h;
+}
+function renderInsp(){
+ const c=fc(selC),b=$('insp');if(!c){b.innerHTML='<span class="mut">'+t('noSel')+'</span>';return}
+ let h='<b>'+t(c.type)+' #'+c.id+'</b>';
+ if(c.type==='battery')h+='<label>'+t('mV')+'<input type="number" data-p="v" min="0" max="24" step="0.5" value="'+c.v+'"></label><input type="range" data-p="v" min="0" max="24" step="0.5" value="'+c.v+'">';
+ if(c.type==='resistor'||c.type==='bulb')h+='<label>'+t('mR')+'<input type="number" data-p="r" min="1" max="100000" step="1" value="'+c.r+'"></label><input type="range" data-p="r" min="1" max="1000" step="1" value="'+Math.min(c.r,1000)+'">'+(c.type==='resistor'?'<div class="row">'+[10,47,100,220,470,1000].map(v=>'<button class="chip" data-pre="'+v+'" type="button">'+v+' Ω</button>').join('')+'</div>':'');
+ if(c.type==='bulb')h+='<label>'+t('mVr')+'<input type="number" data-p="vr" min="1" max="24" step="0.5" value="'+(c.vr||6)+'"></label>';if(c.type==='switch')h+='<div class="row"><button class="btn" data-tg="1" type="button">'+t('sw')+': '+(c.closed?'ON':'OFF')+'</button></div>';
+ b.innerHTML=h;
+}
+function renderResults(s){
+ const ok=s.ok&&powered;
+ $('lV').textContent=ok?fN(s.Vs,2):'–';$('lI').textContent=ok?fA(s.I):'–';$('lR').textContent=ok&&s.I?fN(s.R,1):'–';$('lP').textContent=ok?fN(s.P,3):'–';
+ let m,k='';
+ if(s.err){m=t(s.err);k=s.short?'no':''}else if(!powered)m=t('msgOff');else if(wStart)m=t('msgWire');else if(s.I>0){m=t('msgOn');k='ok'}else{m=t('msgOpen');k='no'}
+ if(wStart)m=t('msgWire');
+ $('labMsg').textContent=m;$('labMsg').className='note '+k;
+ const ms=comps.filter(c=>c.type==='voltmeter'||c.type==='ammeter');
+ $('meters').innerHTML=ms.length?ms.map(c=>'<div>'+t(c.type)+' #'+c.id+': <b>'+(ok?(c.type==='voltmeter'?fN(vc(s,c),3)+' V':fA(vc(s,c)/.01)+' A'):'– ('+t('off')+')')+'</b></div>').join(''):'<span class="mut">–</span>';
+}
+function renderLab(){const s=solve();renderBoard(s);renderInsp();renderResults(s)}
+function live(){const s=solve();renderBoard(s);renderResults(s)}
+function pt(e){const r=svg.getBoundingClientRect();return{x:(e.clientX-r.left)*1400/r.width,y:(e.clientY-r.top)*700/r.height}}
+svg.addEventListener('pointerdown',e=>{
+ const T=e.target.closest('[data-t]');
+ if(T){e.preventDefault();const k=T.dataset.t;if(wStart&&wStart!==k){if(!wires.some(w=>(w.a===wStart&&w.b===k)||(w.a===k&&w.b===wStart)))(wires.push({id:wid++,a:wStart,b:k,p:wp.slice()}),wp=[]);wStart=null;powered=false;renderLab()}else{wStart=wStart===k?null:k;wp=[];mouse=pt(e);renderLab()}return}
+ const W=e.target.closest('[data-w]');if(W){selW=+W.dataset.w;selC=null;wStart=null;renderLab();return}
+ const C=e.target.closest('[data-c]');if(C){const c=fc(+C.dataset.c),p=pt(e);selC=c.id;selW=null;wStart=null;drag={id:c.id,dx:p.x-c.x,dy:p.y-c.y};renderLab();return}
+ if(wStart){wp.push(sn(pt(e)));renderLab();return}
+ selC=null;selW=null;wStart=null;renderLab();
+});
+document.addEventListener('pointermove',e=>{if(drag){const c=fc(drag.id),p=pt(e);c.x=Math.max(60,Math.min(BW-60,p.x-drag.dx));c.y=Math.max(55,Math.min(BH-60,p.y-drag.dy));live()}else if(wStart){mouse=pt(e);live()}});
+document.addEventListener('pointerup',()=>{drag=null});
+$('insp').addEventListener('input',e=>{const c=fc(selC),p=e.target.dataset.p;if(!c||!p)return;c[p]=Math.max(+e.target.min||0,Math.min(+e.target.max||1e5,+e.target.value||0));
+ e.target.parentElement.querySelectorAll('[data-p]').forEach(x=>{if(x!==e.target)x.value=c[p]});live()});
+$('insp').addEventListener('click',e=>{const c=fc(selC);if(!c)return;if(e.target.dataset.pre){c.r=+e.target.dataset.pre;renderLab()}if(e.target.dataset.tg){c.closed=!c.closed;renderLab()}});
+$('labPower').onclick=()=>{powered=!powered;wStart=null;buildPalette();renderLab()};
+$('labRot').onclick=()=>{const c=fc(selC);if(c){c.rot=(c.rot+90)%360;renderLab()}};
+function delSel(){if(selC!==null){const id=selC;comps=comps.filter(c=>c.id!==id);wires=wires.filter(w=>+w.a.split(':')[0]!==id&&+w.b.split(':')[0]!==id);selC=null}else if(selW!==null){wires=wires.filter(w=>w.id!==selW);selW=null}renderLab()}
+$('labDel').onclick=delSel;
+$('labClear').onclick=()=>{if(confirm(t('conf'))){comps=[];wires=[];selC=selW=wStart=null;powered=false;buildPalette();renderLab()}};
+window.addEventListener('keydown',e=>{if((e.key==='Delete')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)&&!$('tab-lab').hidden)delSel()});
+function example(kind){
+ comps=[];wires=[];cid=1;wid=1;powered=false;wStart=null;selW=null;
+ const mk=(type,x,y)=>{const c={id:cid++,type,x:x*1.55,y:y*1.8,rot:0,...clone(DEFV[type])};comps.push(c);return c.id};
+ const bat=mk('battery',130,230);
+ if(kind==='s'){const r=mk('resistor',380,110),b=mk('bulb',640,110),a=mk('ammeter',380,340);wires=[[bat+':1',r+':0'],[r+':1',b+':0'],[b+':1',a+':1'],[a+':0',bat+':0']]}
+   else{const bt=comps[0];bt.x=220;bt.y=350;const r1=mk('resistor',0,0),r2=mk('resistor',0,0),v=mk('voltmeter',0,0),X=[650,950,1250];[r1,r2,v].forEach((id,k)=>{const c=comps.find(q=>q.id===id);c.x=X[k];c.y=350;c.rot=90});
+   const Y0=150,Y1=550,P=k=>tp(k),top=id=>{const a=P(id+':0'),b=P(id+':1');return a.y<=b.y?id+':0':id+':1'},bot=id=>top(id)===id+':0'?id+':1':id+':0',bp=bat+':1',bn=bat+':0',R=(a,b,y)=>({a,b,p:[{x:P(a).x,y},{x:P(b).x,y}]});
+   wires=[R(bp,top(r1),Y0),R(top(r1),top(r2),Y0),R(top(r2),top(v),Y0),R(bn,bot(r1),Y1),R(bot(r1),bot(r2),Y1),R(bot(r2),bot(v),Y1)]}
+wires=wires.map(w=>Array.isArray(w)?{id:wid++,a:w[0],b:w[1]}:{id:wid++,...w});selC=bat;buildPalette();renderLab();
+}
+$('ex1').onclick=()=>example('s');$('ex2').onclick=()=>example('p');
+
+/* ===== lab: current flow, bulb brightness, result table ===== */
+let elec=false,FL=[],OFF={},dots=[],bright={},bT={},lt2=performance.now();
+const bR=c=>Math.pow(c.vr||6,2)/resOf(c);
+function flowsOf(s){
+ const segs=[],sup={},ci={},add=(k,v)=>{sup[k]=(sup[k]||0)+v};
+ comps.forEach(c=>{
+  if(c.type==='battery'){const r=s.srcI.find(x=>x.id===c.id),i=r?r.i:0;ci[c.id]=i;add(c.id+':1',i);add(c.id+':0',-i)}
+  else if(c.type!=='switch'){const i=(s.vo[s.nd(c.id+':0')]-s.vo[s.nd(c.id+':1')])/resOf(c);ci[c.id]=i;add(c.id+':0',-i);add(c.id+':1',i)}
+ });
+ const edges=[],adj={};
+ wires.forEach(w=>edges.push({k:'w'+w.id,a:w.a,b:w.b}));
+ comps.forEach(c=>{adj[c.id+':0']=[];adj[c.id+':1']=[];if(c.type==='switch'&&c.closed)edges.push({k:'s'+c.id,a:c.id+':0',b:c.id+':1'})});
+ edges.forEach(e=>{if(adj[e.a]&&adj[e.b]){adj[e.a].push({e,to:e.b});adj[e.b].push({e,to:e.a})}});
+ const seen={},flow={};
+ Object.keys(adj).forEach(root=>{if(seen[root])return;seen[root]=1;const order=[],par={},st=[root];
+  while(st.length){const n=st.pop();order.push(n);adj[n].forEach(({e,to})=>{if(!seen[to]){seen[to]=1;par[to]={e,from:n};st.push(to)}})}
+  const S={};order.forEach(n=>S[n]=sup[n]||0);
+  for(let i=order.length-1;i>0;i--){const n=order[i],p=par[n];S[p.from]+=S[n];flow[p.e.k]=(p.e.a===n?1:-1)*S[n]}});
+ wires.forEach(w=>{const a=tp(w.a),b=tp(w.b),i=flow['w'+w.id]||0;if(a&&b&&Math.abs(i)>1e-4){const P=[a,...(w.p||[]),b];for(let k=0;k<P.length-1;k++)segs.push({key:'w'+w.id+'_'+k,x1:P[k].x,y1:P[k].y,x2:P[k+1].x,y2:P[k+1].y,i,arrow:1})}});
+ comps.forEach(c=>{const i=c.type==='switch'?(c.closed?(flow['s'+c.id]||0):0):ci[c.id];if(Math.abs(i||0)>1e-4){const a=tp(c.id+':0'),b=tp(c.id+':1');segs.push({key:'c'+c.id,x1:a.x,y1:a.y,x2:b.x,y2:b.y,i})}});
+ return segs;
+}
+const _rb=renderBoard;
+renderBoard=function(s){
+ _rb(s);
+ const ok=powered&&s&&s.ok;
+ if(!comps.length){bright={};bT={}}
+ comps.forEach(c=>{if(c.type==='bulb')bT[c.id]=ok?Math.pow(vc(s,c),2)/resOf(c)/bR(c):0});
+ FL=ok?flowsOf(s):[];
+ const col=elec?'#5ce1f2':'#ffe28a',P=(x,y)=>x.toFixed(1)+','+y.toFixed(1);
+ let h='<g id="fl" pointer-events="none" style="filter:drop-shadow(0 0 3px '+(elec?'#5ce1f2':'#ffb938')+')">',idx=0;
+ FL.forEach(sg=>{
+  const len=Math.hypot(sg.x2-sg.x1,sg.y2-sg.y1),fw=(sg.i>=0)!==elec;
+  sg.len=len;sg.n=len<4?0:Math.max(1,Math.round(len/24));sg.base=idx;idx+=sg.n;sg.off=OFF[sg.key]||0;
+  for(let k=0;k<sg.n;k++)h+='<circle class="fd" r="3.6" fill="'+col+'" cx="-20" cy="-20"/>';
+  if(sg.arrow&&len>46){const ux=(sg.x2-sg.x1)/len*(fw?1:-1),uy=(sg.y2-sg.y1)/len*(fw?1:-1),mx=(sg.x1+sg.x2)/2,my=(sg.y1+sg.y2)/2;
+   h+='<polygon fill="'+(elec?'#5ce1f2':'#ffb938')+'" stroke="#06121d" stroke-width="1" points="'+P(mx+ux*8,my+uy*8)+' '+P(mx-ux*5-uy*6,my-uy*5+ux*6)+' '+P(mx-ux*5+uy*6,my-uy*5-ux*6)+'"/>'}
+ });
+ h+='</g>';svg.insertAdjacentHTML('beforeend',h);dots=svg.querySelectorAll('#fl .fd');stepFlow(0);
+};
+function stepFlow(dt){
+ FL.forEach(sg=>{if(!sg.n)return;const spd=30+90*Math.min(Math.sqrt(Math.abs(sg.i)),2),fw=(sg.i>=0)!==elec,d=sg.len/sg.n;
+  sg.off=(sg.off+dt*spd)%sg.len;OFF[sg.key]=sg.off;
+  for(let k=0;k<sg.n;k++){const el=dots[sg.base+k];if(!el)continue;let u=((k*d+sg.off)%sg.len)/sg.len;if(!fw)u=1-u;el.setAttribute('cx',sg.x1+(sg.x2-sg.x1)*u);el.setAttribute('cy',sg.y1+(sg.y2-sg.y1)*u)}});
+}
+function paintBulb(id,b){
+ const k=Math.min(b,1),f=svg.querySelector('[data-bf="'+id+'"]'),g=svg.querySelector('[data-bg="'+id+'"]');
+ if(f){if(b<.02){f.setAttribute('fill','#193449');f.setAttribute('stroke','#7f9aaa');f.style.filter='none'}
+  else{f.setAttribute('fill','rgb('+Math.round(40+215*Math.min(1,k*1.4))+','+Math.round(25+230*k*k)+','+Math.round(20+190*k*k*k)+')');f.setAttribute('stroke',k>.15?'#fff1b5':'#c0603a');f.style.filter='drop-shadow(0 0 '+Math.round(3+16*Math.min(b,1.6))+'px rgba(255,200,90,'+(.3+.5*k).toFixed(2)+'))'}}
+ if(g){g.setAttribute('r',26+62*Math.min(b,1.6));g.setAttribute('opacity',Math.min(1,Math.min(b,1.3)*.75))}
+}
+function labLoop(tm){
+ const dt=Math.min((tm-lt2)/1000,.05);lt2=tm;
+ if(!$('tab-lab').hidden){
+  comps.forEach(c=>{if(c.type==='bulb'){const cur=bright[c.id]||0,tg=bT[c.id]||0;bright[c.id]=Math.abs(tg-cur)<.002?tg:cur+(tg-cur)*Math.min(1,dt*4);paintBulb(c.id,bright[c.id])}});
+  stepFlow(dt);
+ }
+ requestAnimationFrame(labLoop);
+}
+function renderTable(s){
+ const b=$('tbl');if(!b)return;const ok=s.ok&&powered,rows=comps.filter(c=>c.type!=='switch');
+ if(!rows.length||!ok){b.innerHTML='<span class="mut">'+t('msgOff')+'</span>';return}
+ b.innerHTML=rows.map(c=>{let v,i;if(c.type==='battery'){v=s.Vs;i=s.I}else{v=vc(s,c);i=v/resOf(c)}
+  let x='<div style="padding:5px 0;border-bottom:1px solid var(--edge);font-size:.85rem"><b>'+esc(t(c.type))+' #'+c.id+'</b> · '+fN(v,2)+' V · '+fA(i)+' A · '+fN(v*i,3)+' W';
+  if(c.type==='bulb'){const pct=v*v/resOf(c)/bR(c)*100;x+='<div class="bar"><i style="width:'+Math.min(pct,100)+'%;background:'+(pct>130?'var(--red)':'var(--amber)')+'"></i></div><small class="mut">'+t('bri')+' '+fN(pct,0)+'%'+(pct>130?' · '+t('over'):pct<35?' · '+t('dim'):'')+'</small>'}
+  return x+'</div>'}).join('');
+}
+const _rr=renderResults;renderResults=function(s){_rr(s);renderTable(s)};
+$('labDir').onclick=()=>{elec=!elec;buildPalette();renderLab()};
+
+/* ===== animated circuit (game) ===== */
+const cc=$('cc'),cx=cc.getContext('2d');let CW=600,CH=330,dpr=1,lastT=performance.now(),offs=[],spark=0,wasBlown=false,flick=0;
+function rsz(){const w=cc.parentElement.clientWidth-16;if(w<=0)return;dpr=Math.min(devicePixelRatio||1,2);CW=w;CH=Math.round(w<480?w*.85:w*.55);cc.style.height=CH+'px';cc.width=CW*dpr;cc.height=CH*dpr}
+window.addEventListener('resize',rsz);
+const lerp=(a,b,k)=>Math.round(a+(b-a)*k);
+function drawCirc(now){
+ const dt=Math.min((now-lastT)/1000,.05);lastT=now;const ctx=cx;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,CW,CH);
+ const s=calc(),live=phase==='idle'||(phase==='play'&&on&&!blown),swOn=phase==='idle'?true:on,over=s.I>FUSE,bg='#0b1b2a';
+ if(blown&&!wasBlown){spark=40;flick=40}wasBlown=blown;
+ const m=CW<480?46:66,x0=m,x1=CW-m,y0=62,y1=CH-56,cy=(y0+y1)/2,w=x1-x0,mid=(x0+x1)/2,rl=CW<480?62:90;
+ const xa=topo==='mixed'?x0+w*.6:mid,xb=x1,simple=topo==='simple'||topo==='series';
+ const Ik={T:s.I,b1:topo==='parallel'?s.c[0].i:topo==='mixed'?s.c[1].i:0,b2:topo==='parallel'?s.c[1].i:topo==='mixed'?s.c[2].i:0};
+ const segs=simple?[[x0,y0,x1,y0,'T'],[x1,y0,x1,y1,'T'],[x1,y1,x0,y1,'T'],[x0,y1,x0,y0,'T']]:[[x0,y0,xa,y0,'T'],[xa,y0,xb,y0,'b2'],[xa,y0,xa,y1,'b1'],[xb,y0,xb,y1,'b2'],[xb,y1,xa,y1,'b2'],[xa,y1,x0,y1,'T'],[x0,y1,x0,y0,'T']];
+ ctx.lineCap='round';ctx.lineJoin='round';ctx.textAlign='center';
+ const stroke=()=>segs.forEach(g=>{ctx.beginPath();ctx.moveTo(g[0],g[1]);ctx.lineTo(g[2],g[3]);ctx.stroke()});
+ ctx.strokeStyle='#3b6177';ctx.lineWidth=6;stroke();
+ if(live){ctx.strokeStyle='rgba(255,185,56,.28)';ctx.lineWidth=3;stroke()}
+ /* battery */
+ ctx.fillStyle=bg;ctx.fillRect(x0-18,cy-30,36,60);
+ ctx.fillStyle='#16354a';ctx.fillRect(x0-14,cy-22,28,44);ctx.strokeStyle='#6a8ba0';ctx.lineWidth=2;ctx.strokeRect(x0-14,cy-22,28,44);
+ ctx.strokeStyle='#ffb938';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x0-12,cy-8);ctx.lineTo(x0+12,cy-8);ctx.stroke();
+ ctx.strokeStyle='#5ce1f2';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(x0-6,cy+8);ctx.lineTo(x0+6,cy+8);ctx.stroke();
+ ctx.font='bold 13px Kanit';ctx.textAlign='left';ctx.fillStyle='#ffb938';ctx.fillText('+',x0+20,cy-6);ctx.fillStyle='#5ce1f2';ctx.fillText('−',x0+20,cy+14);
+ ctx.textAlign='center';ctx.fillStyle='#f2f6f4';ctx.font='600 13px Kanit';ctx.fillText(s.v+' V',x0,cy+46);
+ /* switch */
+ const swx=simple?x0+(mid-x0)/2:topo==='parallel'?x0+(xa-x0)/2:x0+(xa-x0)*.22;
+ ctx.fillStyle=bg;ctx.fillRect(swx-28,y1-10,56,20);ctx.fillStyle='#cfe3ec';[swx-24,swx+24].forEach(x=>{ctx.beginPath();ctx.arc(x,y1,4,0,7);ctx.fill()});
+ ctx.strokeStyle=swOn?'#7be0b0':'#ff8a80';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(swx-24,y1);ctx.lineTo(swOn?swx+24:swx+17,swOn?y1:y1-24);ctx.stroke();
+ ctx.fillStyle='#a9c0cc';ctx.font='12px Kanit';ctx.fillText(lang==='en'?'Switch':'สวิตช์',swx,y1+24);
+ /* fuse */
+ const fuse=(x,y,hz,ly)=>{ctx.save();ctx.translate(x,y);if(hz)ctx.rotate(Math.PI/2);ctx.fillStyle=bg;ctx.fillRect(-14,-34,28,68);
+  ctx.fillStyle='rgba(180,210,225,.12)';ctx.fillRect(-10,-30,20,60);ctx.strokeStyle='#9fb6c2';ctx.lineWidth=3;ctx.strokeRect(-10,-30,20,60);
+  ctx.strokeStyle=blown?'#ff5a4f':live&&over?'#ff9a7a':'#cfe3ec';ctx.lineWidth=2;ctx.beginPath();
+  if(blown){ctx.moveTo(0,-30);ctx.lineTo(-2,-7);ctx.moveTo(2,7);ctx.lineTo(0,30)}else{ctx.moveTo(0,-30);ctx.lineTo(0,30)}ctx.stroke();ctx.restore();
+  if(spark>0){ctx.strokeStyle='#fff3c4';ctx.lineWidth=2;for(let k=0;k<7;k++){const a=Math.random()*6.28,l=10+Math.random()*28;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);ctx.stroke()}}
+  ctx.fillStyle=blown?'#ff5a4f':'#a9c0cc';ctx.font='12px Kanit';ctx.textAlign='center';ctx.fillText(blown?(lang==='en'?'Fuse blown!':'ฟิวส์ขาด!'):(lang==='en'?'Fuse 0.3 A':'ฟิวส์ 0.3 A'),x,ly)};
+ if(simple)fuse(x1,cy,false,cy+50);else if(topo==='parallel')fuse(x0+(xa-x0)/2,y0,true,y0-24);else fuse(x0+(xa-x0)*.75,y1,true,y1+34);
+ if(spark>0)spark--;
+ /* resistor */
+ const res=(x,y,hz,c,lab,below)=>{
+  const heat=live?Math.min(c.v*c.i/(topo==='simple'?3:1.5),1):0;
+  if(heat>.2){const g=ctx.createRadialGradient(x,y,4,x,y,50);g.addColorStop(0,'rgba(255,80,50,'+heat*.45+')');g.addColorStop(1,'rgba(255,80,50,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,50,0,7);ctx.fill()}
+  ctx.save();ctx.translate(x,y);if(!hz)ctx.rotate(Math.PI/2);
+  ctx.fillStyle=bg;ctx.fillRect(-rl/2-2,-13,rl+4,26);
+  ctx.fillStyle='rgb('+lerp(210,255,heat)+','+lerp(170,90,heat)+','+lerp(110,60,heat)+')';ctx.beginPath();ctx.roundRect(-rl/2+8,-9,rl-16,18,6);ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,.55)';[.18,.38,.58].forEach(f=>ctx.fillRect(-rl/2+8+(rl-16)*f,-9,5,18));ctx.fillStyle='#d4a017';ctx.fillRect(-rl/2+8+(rl-16)*.78,-9,5,18);
+  ctx.strokeStyle='#cfe3ec';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-rl/2,0);ctx.lineTo(-rl/2+8,0);ctx.moveTo(rl/2-8,0);ctx.lineTo(rl/2,0);ctx.stroke();ctx.restore();
+  ctx.fillStyle='#a9c0cc';ctx.font='12px Kanit';const l2=live?fA(c.i)+' A · '+fN(c.v,1)+' V':'';
+  if(hz){ctx.textAlign='center';if(below){ctx.fillText(lab+' = '+c.r+' Ω',x,y+30);l2&&ctx.fillText(l2,x,y+44)}else{ctx.fillText(lab+' = '+c.r+' Ω',x,y-34);l2&&ctx.fillText(l2,x,y-20)}}
+  else{ctx.textAlign='left';ctx.fillText(lab+' = '+c.r+' Ω',x+16,y-4);l2&&ctx.fillText(l2,x+16,y+11)}};
+ if(topo==='simple'){
+  let b=live?Math.min(s.v*s.I/2.2,1):0;if(flick>0){flick--;b*=Math.random()*.7}
+  if(b>0){const g=ctx.createRadialGradient(mid,y0,6,mid,y0,40+110*b);g.addColorStop(0,'rgba(255,214,110,'+(.55*b+.1)+')');g.addColorStop(1,'rgba(255,214,110,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mid,y0,40+110*b,0,7);ctx.fill()}
+  ctx.fillStyle=bg;ctx.fillRect(mid-26,y0-14,52,28);
+  ctx.fillStyle='#4a5b68';ctx.fillRect(mid-9,y0+17,18,9);
+  ctx.beginPath();ctx.arc(mid,y0,21,0,7);ctx.fillStyle=b>.02?'rgb(255,'+lerp(200,245,b)+','+lerp(90,170,b)+')':'#27394a';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle=b>.02?'#fff1b5':'#6b8190';ctx.stroke();
+  ctx.strokeStyle=b>.02?'#fff':'#7d8f9b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mid-9,y0+9);ctx.quadraticCurveTo(mid-5,y0-9,mid,y0+3);ctx.quadraticCurveTo(mid+5,y0-9,mid+9,y0+9);ctx.stroke();
+  if(b>.5){ctx.strokeStyle='rgba(255,241,181,'+b*.8+')';ctx.lineWidth=2;for(let k=0;k<8;k++){const a=k*Math.PI/4;ctx.beginPath();ctx.moveTo(mid+Math.cos(a)*30,y0+Math.sin(a)*30);ctx.lineTo(mid+Math.cos(a)*(38+b*10),y0+Math.sin(a)*(38+b*10));ctx.stroke()}}
+  ctx.fillStyle='#a9c0cc';ctx.font='12px Kanit';ctx.textAlign='center';ctx.fillText(lang==='en'?'Lamp':'หลอดไฟ',mid,y0-32);
+  res(mid,y1,true,s.c[0],'R',true);
+ }else if(topo==='series'){res(mid,y0,true,s.c[0],'R₁',false);res(mid,y1,true,s.c[1],'R₂',true)}
+ else if(topo==='parallel'){res(xa,cy,false,s.c[0],'R₁');res(xb,cy,false,s.c[1],'R₂')}
+ else{res(x0+(xa-x0)*.5,y0,true,s.c[0],'R₁',false);res(xa,cy,false,s.c[1],'R₂');res(xb,cy,false,s.c[2],'R₃')}
+ /* moving charges */
+ if(live){ctx.fillStyle='#ffe28a';ctx.shadowColor='#ffb938';ctx.shadowBlur=8;
+  segs.forEach((g,j)=>{const len=Math.hypot(g[2]-g[0],g[3]-g[1]),n=Math.max(2,Math.round(len/24)),d=len/n,ci=Ik[g[4]];
+   offs[j]=((offs[j]||0)+dt*(25+Math.min(ci,.4)*380))%len;
+   for(let k=0;k<n;k++){const u=((k*d+offs[j])%len)/len;ctx.beginPath();ctx.arc(g[0]+(g[2]-g[0])*u,g[1]+(g[3]-g[1])*u,3,0,7);ctx.fill()}});ctx.shadowBlur=0}
+}
+function loopC(tm){if(!$('tab-game').hidden)drawCirc(tm);else lastT=tm;requestAnimationFrame(loopC)}
+
+/* ===== MediaPipe hand mode: pinch (thumb+index) to wire / drag ===== */
+const HM={on:0,pin:0},MPV='https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/';
+function hstep(cx,cy,pin){
+ const cu=$('hcur'),r=svg.getBoundingClientRect(),x=(cx-r.left)/r.width*BW,y=(cy-r.top)/r.height*BH;
+ cu.style.left=cx+'px';cu.style.top=cy+'px';cu.style.background=pin?'rgba(255,90,79,.7)':'rgba(92,225,242,.5)';
+ if(pin&&!HM.pin){const el=document.elementFromPoint(cx,cy),ad=el&&el.closest('[data-add]'),bt=el&&el.closest('button,select,[data-tab]');
+  if(ad){addC(ad.dataset.add,x,y);const c=comps[comps.length-1];drag={id:c.id,dx:0,dy:0}}
+  else if(bt&&bt.id!=='labHand'){bt.click()}
+  else if(x>0&&x<BW&&y>0&&y<BH){let k=null,bd=60;comps.forEach(c=>[0,1].forEach(i=>{const q=c.id+':'+i,pp=tp(q),d=Math.hypot(pp.x-x,pp.y-y);if(d<bd){bd=d;k=q}}));
+   if(k){if(wStart&&wStart!==k){if(!wires.some(w=>(w.a===wStart&&w.b===k)||(w.a===k&&w.b===wStart)))(wires.push({id:wid++,a:wStart,b:k,p:wp.slice()}),wp=[]);wStart=null;powered=false;renderLab()}else{wStart=k;mouse={x,y};renderLab()}}
+   else{let c=null;bd=80;comps.forEach(q=>{const d=Math.hypot(q.x-x,q.y-y);if(d<bd){bd=d;c=q}});if(c){selC=c.id;drag={id:c.id,dx:x-c.x,dy:y-c.y};renderLab()}}}}
+ else if(pin){if(drag){const c=fc(drag.id);c.x=Math.max(60,Math.min(BW-60,x-drag.dx));c.y=Math.max(55,Math.min(BH-60,y-drag.dy));live()}else if(wStart){mouse={x,y};live()}}
+ else if(HM.pin)drag=null;
+ HM.pin=pin;
+}
+function hmStop(){HM.on=0;const v=$('hvid');if(v.srcObject)v.srcObject.getTracks().forEach(t=>t.stop());v.srcObject=null;v.style.display='none';$('hcur').style.display='none';$('labHand').textContent='🖐 '+TT('โหมดมือ','Hand mode')}
+async function hmStart(){
+ toast(TT('กำลังโหลด MediaPipe...','Loading MediaPipe...'));
+ try{
+  if(!window.Hands)await new Promise((ok,no)=>{const e=document.createElement('script');e.src=MPV+'hands.js';e.onload=ok;e.onerror=no;document.head.appendChild(e)});
+  const h=new Hands({locateFile:f=>MPV+f});h.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.6,minTrackingConfidence:.6});
+  h.onResults(r=>{const L=r.multiHandLandmarks&&r.multiHandLandmarks[0],cu=$('hcur');if(!L){cu.style.display='none';return}cu.style.display='block';const a=L[8],b=L[4];let x=(1-a.x)*innerWidth,y=a.y*innerHeight;if(HM.sx!==undefined){x=HM.sx+(x-HM.sx)*.5;y=HM.sy+(y-HM.sy)*.5}HM.sx=x;HM.sy=y;hstep(x,y,Math.hypot(a.x-b.x,a.y-b.y)<.05)});
+  await Promise.race([h.initialize(),new Promise((_,no)=>setTimeout(no,20000))]);
+  const v=$('hvid');v.srcObject=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,facingMode:'user'}});await v.play();v.style.display='block';
+  HM.on=1;$('labHand').textContent='✋ '+TT('ปิดโหมดมือ','Stop hand mode');toast(TT('จีบนิ้วโป้ง+ชี้ที่ขั้วเพื่อต่อสาย / จีบที่อุปกรณ์แล้วลากเพื่อย้าย','Pinch on a terminal to wire, pinch a part to drag'),);
+  const loop=async()=>{if(!HM.on)return;try{await h.send({image:v})}catch(e){}requestAnimationFrame(loop)};loop();
+ }catch(e){hmStop();toast(TT('เปิดโหมดมือไม่ได้ (หน้านี้อาจบล็อก MediaPipe/กล้อง) ลองดาวน์โหลดไฟล์ไปเปิดเอง','Hand mode unavailable here (MediaPipe/camera blocked). Try the downloaded file.'))}
+}
+$('labHand').onclick=()=>HM.on?hmStop():hmStart();
+function renderAll(){renderGame();renderQuiz();renderLab()}
+setSliders(null);applyLang();rsz();requestAnimationFrame(loopC);requestAnimationFrame(labLoop);
+</script>
+<script>
+function calcOhm(){const g=id=>{const v=$(id).value.trim();return v===''?null:+v},en=lang==='en',o=$('cOut'),r=x=>+x.toFixed(4);let V=g('cV'),I=g('cI'),R=g('cR');
+ if([V,I,R].filter(x=>x===null).length!==1){o.textContent=en?'Fill in exactly two boxes and leave one blank.':'กรอก 2 ช่อง แล้วเว้นช่องที่ต้องการหาไว้ 1 ช่อง';return}
+ if([V,I,R].some(x=>x!==null&&!(x>0))){o.textContent=en?'Values must be greater than 0.':'ค่าต้องมากกว่า 0';return}
+ let m;if(V===null){V=I*R;m='V = I × R = '+I+' × '+R+' = '+r(V)+' V'}else if(I===null){I=V/R;m='I = V ÷ R = '+V+' ÷ '+R+' = '+r(I)+' A ('+r(I*1000)+' mA)'}else{R=V/I;m='R = V ÷ I = '+V+' ÷ '+I+' = '+r(R)+' Ω'}
+ o.textContent=m+'  ·  P = V × I = '+r(V*I)+' W';}
+</script>
+
+<script>
+(function(){
+const V3=THREE.Vector3,PI=Math.PI,M=(c,m,r,x)=>new THREE.MeshStandardMaterial(Object.assign({color:c,metalness:m,roughness:r},x||{}));
+const cuM=M(0xc4713f,.8,.35),pg=new THREE.SphereGeometry(.1,10,10),pm=new THREE.MeshBasicMaterial({color:0xffe28a});
+function sh(g){g.traverse(m=>{if(m.isMesh)m.castShadow=true});return g}
+function tube(a,b,r){const d=b.clone().sub(a),m=new THREE.Mesh(new THREE.CylinderGeometry(r||.11,r||.11,Math.max(d.length(),.001),12),cuM);m.position.copy(a).add(b).multiplyScalar(.5);if(d.length()>0)m.quaternion.setFromUnitVectors(new V3(0,1,0),d.clone().normalize());m.castShadow=true;return m}
+function stage(host,bw,bd,pos){
+ const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;
+ R.domElement.style.cssText='display:block;width:100%;height:100%';host.appendChild(R.domElement);
+ const S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.1,150);cam.position.set(pos[0],pos[1],pos[2]);
+ const oc=new THREE.OrbitControls(cam,R.domElement);oc.enableDamping=true;oc.dampingFactor=.08;oc.minDistance=5;oc.maxDistance=45;oc.maxPolarAngle=PI/2.05;
+ S.add(new THREE.HemisphereLight(0xcfe8ff,0x0b1b2a,.9));
+ const dl=new THREE.DirectionalLight(0xffffff,1.1);dl.position.set(6,12,5);dl.castShadow=true;dl.shadow.mapSize.set(2048,2048);const sc=dl.shadow.camera;sc.left=-bw-2;sc.right=bw+2;sc.top=bw+2;sc.bottom=-bw-2;sc.near=1;sc.far=60;sc.updateProjectionMatrix();dl.shadow.bias=-.0005;S.add(dl);
+ const fl=new THREE.DirectionalLight(0x5ce1f2,.35);fl.position.set(-8,5,-6);S.add(fl);
+ const b=new THREE.Mesh(new THREE.BoxGeometry(bw*2+1,.5,bd*2+1),M(0x16384f,.2,.65));b.position.y=-.25;b.receiveShadow=true;S.add(b);
+ const r=new THREE.Mesh(new THREE.BoxGeometry(bw*2+1.6,.3,bd*2+1.6),M(0x0a1d2e,.5,.5));r.position.y=-.55;S.add(r);
+ const gr=new THREE.GridHelper(bw*2,bw*2,0x2f6c8f,0x1f4963);gr.scale.z=bd/bw;gr.position.y=.01;S.add(gr);
+ const fit=()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){R.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}};new ResizeObserver(fit).observe(host);
+ return{S,cam,oc,R,host,vis:()=>host.offsetWidth>0}}
+function lead(g){const m=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,1.7,8),cuM);m.rotation.z=PI/2;g.add(m)}
+function pRes(){const g=new THREE.Group();lead(g);const body=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,1.2,24),M(0xd9b98a,.1,.6,{emissive:0xff4a20,emissiveIntensity:0}));body.rotation.z=PI/2;g.add(body);
+ [[-.4,0x7a3b12],[-.2,0x111111],[0,0xd22244],[.4,0xd4a017]].forEach(([x,c])=>{const k=new THREE.Mesh(new THREE.CylinderGeometry(.44,.44,.1,24),M(c,.1,.5));k.rotation.z=PI/2;k.position.x=x;g.add(k)});g.position.y=.35;return{g:sh(g),body}}
+function pBulb(){const g=new THREE.Group();lead(g);const bs=new THREE.Mesh(new THREE.CylinderGeometry(.4,.45,.55,20),M(0x9aa7b0,.9,.3));bs.position.y=.15;g.add(bs);
+ const gm=M(0xffffff,0,.1,{transparent:true,opacity:.6,emissive:0xffc860,emissiveIntensity:0}),gl=new THREE.Mesh(new THREE.SphereGeometry(.8,32,24),gm);gl.position.y=1.15;g.add(gl);
+ const f=new THREE.Mesh(new THREE.TorusGeometry(.18,.025,8,20),M(0x664500,.5,.5));f.position.y=1.05;g.add(f);
+ const pl=new THREE.PointLight(0xffc860,0,9);pl.position.y=1.2;g.add(pl);g.position.y=.35;return{g:sh(g),gm,pl}}
+function pBat(ax){const g=new THREE.Group(),w=new THREE.Group();
+ const b=new THREE.Mesh(new THREE.CylinderGeometry(.6,.6,1.9,28),M(0x1c1c1c,.5,.4)),c=new THREE.Mesh(new THREE.CylinderGeometry(.52,.52,.4,28),M(0xe8a021,.8,.3)),n=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,.18,16),M(0xcccccc,.9,.2));
+ c.position.y=-1.05;n.position.y=-1.25;w.add(b,c,n);if(ax==='z')w.rotation.x=PI/2;else w.rotation.z=PI/2;g.add(w);g.position.y=.65;return{g:sh(g)}}
+function pSw(){const g=new THREE.Group(),b=new THREE.Mesh(new THREE.BoxGeometry(1.2,.25,.7),M(0x9aa7b0,.6,.4)),p=new THREE.Group(),l=new THREE.Mesh(new THREE.BoxGeometry(.95,.14,.22),M(0x7be0b0,.2,.4));
+ lead(g);l.position.x=.45;p.add(l);p.position.set(-.5,.25,0);g.add(b,p);g.position.y=.3;return{g:sh(g),p,l}}
+function pMeter(ch){const g=new THREE.Group(),b=new THREE.Mesh(new THREE.BoxGeometry(1.3,.7,1),M(0xf08a00,.2,.5)),cv=document.createElement('canvas');cv.width=128;cv.height=96;const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,128,96);x.fillStyle='#222';x.font='bold 70px sans-serif';x.textAlign='center';x.fillText(ch,64,72);
+ const t=new THREE.Mesh(new THREE.PlaneGeometry(.9,.65),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}));t.rotation.x=-PI/2;t.position.y=.36;lead(g);g.add(b,t);g.position.y=.45;return{g:sh(g)}}
+function clear(g){while(g.children.length){const c=g.children[0];g.remove(c)}}
+const G=stage($('g3'),6.5,4.2,[8,8,10]),L=stage($('l3'),12,6,[0,16,14]);
+let gGrp=new THREE.Group(),gPaths=[],gRes=[],gBulb=null,gSw=null,gTopo='',gBri=0;G.S.add(gGrp);
+function gBuild(){
+ clear(gGrp);gPaths=[];gRes=[];gBulb=null;gSw=null;gTopo=topo;
+ const P=(x,z)=>new V3(x,.35,z);let sg;
+ if(topo==='simple'||topo==='series')sg=[[[P(-5,-1),P(-5,-3),P(5,-3),P(5,3),P(-5,3),P(-5,1)],'T']];
+ else if(topo==='parallel')sg=[[[P(-5,-1),P(-5,-3),P(-1,-3)],'T'],[[P(-1,-3),P(-1,3)],'b1'],[[P(-1,-3),P(3,-3),P(3,3),P(-1,3)],'b2'],[[P(-1,3),P(-5,3),P(-5,1)],'T']];
+ else sg=[[[P(-5,-1),P(-5,-3),P(1,-3)],'T'],[[P(1,-3),P(1,3)],'b1'],[[P(1,-3),P(5,-3),P(5,3),P(1,3)],'b2'],[[P(1,3),P(-5,3),P(-5,1)],'T']];
+ sg.forEach(([pts,key])=>{let len=0;pts.forEach((q,j)=>{const s=new THREE.Mesh(new THREE.SphereGeometry(.11,10,10),cuM);s.position.copy(q);gGrp.add(s);if(j){gGrp.add(tube(pts[j-1],q));len+=q.distanceTo(pts[j-1])}});
+  const n=Math.max(3,Math.round(len/.9)),ps=[];for(let k=0;k<n;k++){const m=new THREE.Mesh(pg,pm);gGrp.add(m);ps.push(m)}gPaths.push({pts,key,len,ps,off:0})});
+ const place=(o,x,z,ry,i)=>{o.g.position.x=x;o.g.position.z=z;o.g.rotation.y=ry||0;gGrp.add(o.g);if(i!==undefined)gRes.push({m:o.body,i});return o};
+ place(pBat('z'),-5,0);const sw=place(pSw(),-3,3);gSw=sw;
+ if(topo==='simple')gBulb=place(pBulb(),0,-3);
+ else if(topo==='series'){place(pRes(),-1.5,-3,0,0);place(pRes(),1.5,3,0,1)}
+ else if(topo==='parallel'){place(pRes(),-1,0,PI/2,0);place(pRes(),3,0,PI/2,1)}
+ else{place(pRes(),-2.5,-3,0,0);place(pRes(),1,0,PI/2,1);place(pRes(),5,0,PI/2,2)}
+}
+function at(p,d){let a=d%p.len;for(let i=1;i<p.pts.length;i++){const l=p.pts[i].distanceTo(p.pts[i-1]);if(a<=l)return p.pts[i-1].clone().lerp(p.pts[i],a/l);a-=l}return p.pts[p.pts.length-1]}
+let lGrp=new THREE.Group(),lBulbs={},lPool=[],lDirty=1,lSel=null;L.S.add(lGrp);
+const W3=(x,y)=>new V3((x-700)/60,.35,(y-350)/60);
+function lBuild(){
+ clear(lGrp);lBulbs={};
+ comps.forEach(c=>{let o;if(c.type==='battery')o=pBat('x');else if(c.type==='resistor')o=pRes();else if(c.type==='bulb'){o=pBulb();lBulbs[c.id]=o}else if(c.type==='switch'){o=pSw();o.p.rotation.z=c.closed?0:.6;o.l.material.color.set(c.closed?0x7be0b0:0xff8a80)}else o=pMeter(c.type==='voltmeter'?'V':'A');
+  o.g.position.x=(c.x-700)/60;o.g.position.z=(c.y-350)/60;o.g.rotation.y=-c.rot*PI/180;lGrp.add(o.g);
+  if(selC===c.id){const r=new THREE.Mesh(new THREE.TorusGeometry(1.1,.05,8,40),new THREE.MeshBasicMaterial({color:0xffb938}));r.rotation.x=PI/2;r.position.set(o.g.position.x,.05,o.g.position.z);lGrp.add(r)}});
+ wires.forEach(w=>{const a=tp(w.a),b=tp(w.b);if(a&&b){const PP=[a,...(w.p||[]),b];for(let k=0;k<PP.length-1;k++){const A=W3(PP[k].x,PP[k].y),B=W3(PP[k+1].x,PP[k+1].y);lGrp.add(tube(A,B,.09));[A,B].forEach(q=>{const s=new THREE.Mesh(new THREE.SphereGeometry(.12,10,10),cuM);s.position.copy(q);lGrp.add(s)})}}});
+ comps.forEach(c=>[0,1].forEach(k=>{const q=tp(c.id+':'+k);if(q){const s=new THREE.Mesh(new THREE.SphereGeometry(.16,12,12),M(0xeaf4f8,.6,.3));s.position.copy(W3(q.x,q.y));lGrp.add(s)}}));
+}
+const _rb3=renderBoard;renderBoard=function(s){_rb3(s);lDirty=1};
+let gOn=true,lOn=false;
+function sync(){$('g3').style.display=gOn?'block':'none';$('cc').style.display=gOn?'none':'block'}
+$('g3b').onclick=()=>{gOn=!gOn;sync()};sync();
+$('lab3').onclick=()=>{lOn=!lOn;$('board').style.display=lOn?'none':'block';$('l3').style.display=lOn?'block':'none';$('lab3').textContent=lOn?'✏ กลับไปต่อวงจร':'🧊 มุมมอง 3D';lDirty=1};
+let lt=performance.now();
+function loop(t){requestAnimationFrame(loop);const dt=Math.min((t-lt)/1000,.05);lt=t;
+ if(gOn&&!$('tab-game').hidden&&G.vis()){
+  if(gTopo!==topo)gBuild();G.oc.update();
+  const s=calc(),live=phase==='idle'||(phase==='play'&&on&&!blown),swOn=phase==='idle'?true:on,k={T:s.I,b1:topo==='parallel'?s.c[0].i:topo==='mixed'?s.c[1].i:0,b2:topo==='parallel'?s.c[1].i:topo==='mixed'?s.c[2].i:0};
+  gPaths.forEach(p=>{const I=live?k[p.key]:0;p.off=(p.off+dt*(I>0?.5+Math.min(I,.5)*6:0))%p.len;const gap=p.len/p.ps.length;p.ps.forEach((m,j)=>{m.visible=live;if(live)m.position.copy(at(p,p.off+j*gap))})});
+  if(gBulb){let b=live?Math.min(s.v*s.I/2.2,1):0;if(blown)b=0;gBri+=(b-gBri)*Math.min(1,dt*6);gBulb.gm.emissiveIntensity=gBri*1.6;gBulb.pl.intensity=gBri*1.8}
+  gRes.forEach(r=>{const c=s.c[r.i],h=live?Math.min(c.v*c.i/1.5,1):0;r.m.material.emissiveIntensity+=(h*.9-r.m.material.emissiveIntensity)*Math.min(1,dt*5)});
+  if(gSw){gSw.p.rotation.z=swOn?0:.6;gSw.l.material.color.set(swOn?0x7be0b0:0xff8a80)}
+  G.R.render(G.S,G.cam)}
+ if(lOn&&!$('tab-lab').hidden&&L.vis()){
+  if(lDirty){lBuild();lDirty=0}L.oc.update();
+  comps.forEach(c=>{const o=lBulbs[c.id];if(o){const b=bright[c.id]||0;o.gm.emissiveIntensity=b*1.6;o.pl.intensity=b*1.8}});
+  let n=0;if(powered)FL.forEach(sg=>{if(!sg.n)return;const A=W3(sg.x1,sg.y1),B=W3(sg.x2,sg.y2),fw=(sg.i>=0)!==elec,d=sg.len/sg.n;
+   for(let q=0;q<sg.n;q++){let u=((q*d+(sg.off||0))%sg.len)/sg.len;if(!fw)u=1-u;let m=lPool[n];if(!m){m=new THREE.Mesh(pg,pm);L.S.add(m);lPool.push(m)}m.visible=true;m.position.copy(A).lerp(B,u);m.position.y=.5;n++}});
+  for(let q=n;q<lPool.length;q++)lPool[q].visible=false;
+  L.R.render(L.S,L.cam)}}
+gBuild();requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+(function(){
+const T2=(a,b)=>lang==='en'?b:a,by=t=>comps.filter(c=>c.type===t),ci=(s,c)=>vc(s,c)/resOf(c);
+const CH=[
+{t:'ต่อหลอดไฟให้สว่าง',te:'Light the bulb',d:'ต่อสายเป็นวงปิด: ถ่าน → สวิตช์ → หลอดไฟ → กลับเข้าถ่าน (ปลายสีส้มคือขั้วบวก) แล้วกด “ตรวจวงจร”',de:'Make a closed loop: battery → switch → bulb → back to battery, then press Check.',parts:['battery','switch','bulb'],h:'หลอดยังไม่สว่าง ตรวจว่าต่อครบทั้ง 2 ขั้วของทุกอุปกรณ์ และสวิตช์ปิดอยู่',he:'Bulb is not lit. Connect both terminals of every part and keep the switch closed.',chk:s=>{const b=by('bulb')[0];return !!b&&ci(s,b)>.005}},
+{t:'ต่อตัวต้านทาน 2 ตัวแบบอนุกรม',te:'Two resistors in series',d:'ต่อถ่าน สวิตช์ และตัวต้านทานทั้งสองให้เป็นเส้นทางเดียวต่อกันเป็นสาย',de:'Connect the battery, switch and both resistors in one single path.',parts:['battery','switch','resistor','resistor'],h:'อนุกรมต้องมีกระแสเท่ากัน และ V₁ + V₂ = V ของถ่าน ลองต่อให้เป็นเส้นทางเดียว',he:'Series: same current and V₁ + V₂ = battery V. Use one single path.',chk:s=>{const r=by('resistor');if(r.length<2)return false;const a=vc(s,r[0]),b=vc(s,r[1]);return a>.05&&b>.05&&Math.abs(a+b-s.Vs)<.05*s.Vs&&Math.abs(ci(s,r[0])-ci(s,r[1]))<1e-4}},
+{t:'ต่อตัวต้านทาน 2 ตัวแบบขนาน',te:'Two resistors in parallel',d:'ต่อให้ตัวต้านทานทั้งสองคร่อมถ่านโดยตรง (ปลายซ้ายต่อกัน ปลายขวาต่อกัน)',de:'Place both resistors directly across the battery (left ends joined, right ends joined).',parts:['battery','switch','resistor','resistor'],h:'ขนานต้องให้ V ตกคร่อมตัวต้านทานแต่ละตัวเท่ากับ V ของถ่าน ลองต่อปลายสองข้างของทั้งคู่เข้าด้วยกัน',he:'Parallel: each resistor gets the full battery V. Join both ends of the pair.',chk:s=>{const r=by('resistor');if(r.length<2)return false;return Math.abs(vc(s,r[0])-s.Vs)<.05&&Math.abs(vc(s,r[1])-s.Vs)<.05}},
+{t:'ต่อเครื่องวัดให้ถูก',te:'Connect the meters',d:'ต่อแอมมิเตอร์แบบอนุกรม และโวลต์มิเตอร์แบบขนานคร่อมตัวต้านทาน',de:'Ammeter in series, voltmeter in parallel across the resistor.',parts:['battery','resistor','ammeter','voltmeter'],h:'แอมมิเตอร์ต้องอยู่ในเส้นทางเดียวกับกระแส ส่วนโวลต์มิเตอร์ต้องต่อคร่อมตัวต้านทานทั้งสองปลาย',he:'Ammeter must be in the current path; voltmeter across both ends of the resistor.',chk:s=>{const r=by('resistor')[0],a=by('ammeter')[0],v=by('voltmeter')[0];if(!r||!a||!v)return false;const ia=vc(s,a)/.01,ir=ci(s,r);return ir>.005&&Math.abs(ia-s.I)<.05*s.I&&Math.abs(ir-s.I)<.05*s.I&&vc(s,v)>.1&&Math.abs(vc(s,v)-vc(s,r))<.05}}];
+let cur=-1,done=ld('ohmChDone',[]);
+function renderCh(){$('chTitle').textContent=T2('🔌 ภารกิจต่อวงจรให้ถูก','🔌 Wire it right');$('chList').innerHTML=CH.map((c,i)=>'<button class="btn'+(done.includes(i)?' main':'')+'" data-ch="'+i+'" type="button" style="width:100%;text-align:left;margin-top:6px">'+(done.includes(i)?'✅ ':'🔌 ')+(i+1)+'. '+T2(c.t,c.te)+'</button>').join('')}
+function banner(m,k){const b=$('chal'),c=CH[cur];b.hidden=false;b.className='note '+(k||'');b.innerHTML='<b>'+T2('ภารกิจต่อวงจร','Wiring mission')+' '+(cur+1)+': '+T2(c.t,c.te)+'</b><br>'+m+'<div class="row"><button class="btn main" type="button" onclick="chCheck()">✔ '+T2('ตรวจวงจร','Check')+'</button><button class="btn" type="button" onclick="chExit()">'+T2('ออกจากภารกิจ','Exit')+'</button></div>'}
+function startCh(i){cur=i;const c=CH[i],n=c.parts.length;switchTab('lab');comps=[];wires=[];cid=1;wid=1;selC=null;selW=null;wStart=null;powered=true;
+ c.parts.forEach((p,k)=>comps.push(Object.assign({id:cid++,type:p,x:220+k*(960/(n-1)),y:250+(k%2)*200,rot:0},clone(DEFV[p]))));
+ buildPalette();renderLab();banner(T2(c.d,c.de),'')}
+window.startCh=startCh;window.chCheck=function(){if(cur<0)return;const s=solve();
+ if(s.err||!(s.I>0)){banner(T2(s.short?'ลัดวงจรที่ถ่าน! ตรวจสายไฟ':'วงจรยังไม่ครบ ไม่มีกระแสไหล ลองต่อสายให้เป็นวงปิด','No current: the loop is open or shorted.'),'no');return}
+ if(CH[cur].chk(s)){if(!done.includes(cur)){done.push(cur);sv('ohmChDone',done)}banner(T2('✅ ถูกต้อง! ต่อวงจรได้เยี่ยมมาก','✅ Correct! Great wiring.'),'ok');toast(T2('✅ ผ่านภารกิจ','✅ Mission complete'));renderCh();window.onChOk&&window.onChOk(cur)}
+ else{window.onChBad&&window.onChBad();banner(T2(CH[cur].h,CH[cur].he),'no')}};
+window.chExit=function(){cur=-1;$('chal').hidden=true};
+$('chList').onclick=e=>{const b=e.target.closest('[data-ch]');if(b)startCh(+b.dataset.ch)};
+$('langBtn').addEventListener('click',()=>setTimeout(renderCh,0));
+$('rs').onclick=()=>{if(confirm(T2('เริ่มภารกิจใหม่ตั้งแต่ข้อ 1 ใช่ไหม?','Restart from mission 1?')))startGame()};
+$('ex').onclick=()=>{if(confirm(T2('ออกจากเกมและกลับหน้าเริ่มต้น?','Quit and go back to start?'))){clearInterval(timer);phase='idle';on=false;blown=false;busy=false;fb='';renderGame()}};
+renderCh();renderGame();
+})();
+</script>
+<style>
+.ov{position:fixed;inset:0;background:rgba(2,8,14,.82);z-index:60;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px}.ov>.card{max-width:1000px;width:100%;margin-top:4vh}
+.ov label{display:block;margin-top:8px;font-weight:600}
+.lvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:10px}
+.lvb{border:1px solid var(--edge);background:var(--bg);color:var(--text);border-radius:14px;padding:10px 4px;cursor:pointer;font-weight:600;transition:transform .15s}.lvb:hover:not(:disabled){transform:translateY(-3px)}.lvb:disabled{opacity:.4;cursor:not-allowed}.lvb small{display:block;color:var(--amber);letter-spacing:2px}
+.pop{display:inline-block;animation:pop .5s ease both}.pop:nth-child(2){animation-delay:.2s}.pop:nth-child(3){animation-delay:.4s}@keyframes pop{0%{transform:scale(0) rotate(-90deg);opacity:0}70%{transform:scale(1.4)}100%{transform:scale(1);opacity:1}}
+.dim{opacity:.25}.tbw{overflow-x:auto;max-height:55vh}.tbw table{min-width:760px}
+@media(prefers-reduced-motion:reduce){.pop{animation:none}}
+</style>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const L=(k,d)=>{try{const s=localStorage.getItem(k);return s?JSON.parse(s):d}catch(e){return d}},S=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}bk(k,v)};
+const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* สำรองข้อมูลบัญชีซ้ำใน IndexedDB (กันกรณี localStorage หาย/ถูกล้าง) */
+const IDBN='ohmBackup',idb=()=>new Promise((ok,no)=>{try{const q=indexedDB.open(IDBN,1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>ok(q.result);q.onerror=()=>no()}catch(e){no()}});
+const BK=['ohmUsers','ohmResults','ohmMe','ohmLast'];
+function bk(k,v){if(!BK.includes(k))return;idb().then(d=>{d.transaction('kv','readwrite').objectStore('kv').put(JSON.stringify(v),k)}).catch(()=>{})}
+function bkAll(){return idb().then(d=>new Promise(ok=>{const o={},st=d.transaction('kv').objectStore('kv'),q=st.openCursor();q.onsuccess=()=>{const c=q.result;if(c){try{o[c.key]=JSON.parse(c.value)}catch(e){}c.continue()}else ok(o)};q.onerror=()=>ok({})})).catch(()=>({}))}
+let users=L('ohmUsers',[]),res=L('ohmResults',[]),me=L('ohmMe',null),timer=null;if(me&&me.demo)me=null;
+const sync=r=>{const u=L('ohmSync','');if(u)try{fetch(u,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(r)}).catch(()=>{})}catch(e){}};
+window.OHMDB={submit(type,title,score,max,stars,secs){if(!me||me.demo)return;const r={ts:Date.now(),sid:me.sid,name:me.name,cls:me.cls,type,title,score,max,stars:stars==null?'':stars,secs:secs==null?'':secs};res.push(r);S('ohmResults',res);sync(r)}};
+function modal(html,closable){const o=document.createElement('div');o.className='ov';o.innerHTML='<div class="card" role="dialog" aria-modal="true">'+html+'</div>';document.body.appendChild(o);o.close=()=>o.remove();if(closable)o.addEventListener('pointerdown',e=>{if(e.target===o)o.remove()});return o}
+/* ---- ลงทะเบียน ---- */
+const sameId=(a,b)=>String(a).trim().toLowerCase()===String(b).trim().toLowerCase();
+function storeOK(){try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return true}catch(e){return false}}
+async function pullUsers(){const u=L('ohmSync','');if(!u)return;try{const a=await (await fetch(u)).json();if(Array.isArray(a)){a.forEach(r=>{if(r&&r.sid&&r.sid!=='DEMO'&&!users.some(x=>x.sid===r.sid))users.push({name:r.name,sid:r.sid,cls:r.cls,ts:r.ts})});S('ohmUsers',users)}}catch(e){}}
+const CLS=['ม.1','ม.2','ม.3','ม.4','ม.5','ม.6'];
+function reg(mode){mode=mode||'login';const R=mode==='reg';
+ const o=modal('<p class="eb">'+(R?'สมัครสมาชิก':'เข้าสู่ระบบ')+'</p><h2>⚡ กู้ภัยไฟฟ้าวิกฤต</h2><div class="row" style="margin:0 0 6px"><button class="tab'+(R?'':' on')+'" id="mL" type="button">เข้าสู่ระบบ</button><button class="tab'+(R?' on':'')+'" id="mR" type="button">สมัครสมาชิก</button></div>'+(R?'<label>ชื่อ-สกุล<input id="rn" autocomplete="name"></label>':'')+'<label>รหัสประจำตัวนักเรียน<input id="lgSid" inputmode="numeric" autocomplete="off"></label><label>ระดับชั้น<select id="rc">'+CLS.map(c=>'<option>'+c+'</option>').join('')+'</select></label><p id="rerr" role="alert" style="color:var(--red);margin:8px 0 0">'+(storeOK()?'':'⚠ เบราว์เซอร์นี้ไม่ยอมจำข้อมูล (โหมดส่วนตัว/ถูกบล็อก) บัญชีจะอยู่ได้เฉพาะตอนเปิดหน้านี้')+'</p><div class="row"><button class="btn main" id="rok" type="button">'+(R?'สมัครและเข้าสู่ระบบ':'เข้าสู่ระบบ')+'</button><button class="btn" id="rdemo" type="button">🎮 ทดลองเล่น (เดโม)</button></div><p class="mut" style="font-size:.8rem;margin:4px 0 0">โหมดเดโม: เล่นได้ทุกอย่าง แต่ไม่บันทึกคะแนนและไม่ส่งให้ครู</p><p class="mut" style="font-size:.85rem">'+(R?'สมัครครั้งเดียว ระบบจะเข้าสู่ระบบให้ทันที':'ยังไม่มีบัญชี? กด “สมัครสมาชิก”  ·  เข้าสู่ระบบใช้เพียงรหัสประจำตัวและระดับชั้น')+'</p>',false);
+ $('mL').onclick=()=>{o.close();reg('login')};$('mR').onclick=()=>{o.close();reg('reg')};
+ const err=m=>{$('rerr').textContent=m};
+ $('rdemo').onclick=()=>{me={name:'ผู้ทดลอง',sid:'DEMO',cls:'-',demo:true};try{localStorage.removeItem('ohmMe')}catch(e){}o.close();head();lvRender();0};
+ const go=async()=>{const sid=$('lgSid').value.trim(),cls=$('rc').value;
+  if(!/^[0-9A-Za-z-]{3,12}$/.test(sid))return err('รหัสประจำตัว 3–12 ตัว (ตัวเลขหรือตัวอักษร)');
+  let u=users.find(x=>sameId(x.sid,sid));
+  if(!u&&!R){const b=await bkAll();(b.ohmUsers||[]).forEach(x=>{if(x&&x.sid&&!users.some(y=>sameId(y.sid,x.sid)))users.push(x)});S('ohmUsers',users);u=users.find(x=>sameId(x.sid,sid))}
+  if(!u&&!R&&L('ohmSync','')){err('กำลังตรวจสอบกับเซิร์ฟเวอร์...');await pullUsers();u=users.find(x=>sameId(x.sid,sid));err('')}
+  if(R){const name=$('rn').value.trim();if(name.length<2)return err('กรุณากรอกชื่อ-สกุล');if(u)return err('รหัสนี้สมัครแล้ว กรุณากด “เข้าสู่ระบบ”');
+   const n={name,sid,cls,ts:Date.now()};users.push(n);S('ohmUsers',users);S('ohmLast',{sid,cls});sync({ts:n.ts,sid,name,cls,type:'register',title:'สมัครสมาชิก',score:'',max:'',stars:'',secs:''});me=n}
+  else{if(!u)return err('ไม่พบรหัสนี้ กรุณาสมัครสมาชิกก่อน');if(u.cls!==cls)return err('ระดับชั้นไม่ตรงกับที่สมัครไว้ (ที่สมัครไว้คือ '+u.cls+')');me=u;S('ohmLast',{sid:u.sid,cls:u.cls})}
+  S('ohmMe',me);o.close();head();lvRender();};
+ $('rok').onclick=go;o.addEventListener('keydown',e=>{if(e.key==='Enter')go()});const la=L('ohmLast',null);if(la){$('lgSid').value=la.sid||'';if(la.cls)$('rc').value=la.cls}($(R?'rn':'lgSid')).focus()}
+function head(){let h=$('ohmHead');if(!h){h=document.createElement('div');h.id='ohmHead';h.className='row';h.style.margin='0';document.querySelector('header').appendChild(h)}
+ h.innerHTML='<button class="tab" id="uBtn" type="button">👤 '+E(me?(me.demo?'โหมดเดโม (ไม่บันทึกคะแนน)':me.name+' · '+me.cls):'เข้าสู่ระบบ')+'</button>'+((me&&!me.demo)?'':'<button class="btn main" id="sBtn" type="button">📝 สมัครสมาชิก</button>')+'<button class="tab" id="tBtn" type="button">👩‍🏫 ครู</button>';
+ $('uBtn').onclick=()=>{if(!me||me.demo||confirm('ออกจากระบบเพื่อเปลี่ยนผู้ใช้?')){me=null;S('ohmMe',null);reg()}};$('tBtn').onclick=teacher;if($('sBtn'))$('sBtn').onclick=()=>reg('reg')}
+/* ---- หลังบ้านครู ---- */
+const csv=rows=>'\ufeff'+rows.map(r=>r.map(c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+function dl(n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+const fd=ts=>{const d=new Date(ts);return d.toLocaleDateString('th-TH')+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})};
+const TY={game:'เกมผ่านด่าน',quiz:'แบบฝึกหัด',wiring:'ต่อวงจร'};
+function summary(rs){const m={};users.forEach(u=>m[u.sid]={name:u.name,sid:u.sid,cls:u.cls,best:{},quiz:0,wir:{},n:0});
+ rs.forEach(r=>{if(r.type==='register'&&!m[r.sid])m[r.sid]={name:r.name,sid:r.sid,cls:r.cls,best:{},quiz:0,wir:{},n:0};const s=m[r.sid];if(!s||r.type==='register')return;s.n++;
+  if(r.type==='game'){const b=s.best[r.title];if(!b||r.score>b.score)s.best[r.title]={score:r.score,stars:+r.stars||0}}
+  else if(r.type==='quiz')s.quiz=Math.max(s.quiz,r.max?Math.round(100*r.score/r.max):0);else if(r.type==='wiring')s.wir[r.title]=1});
+ return Object.values(m).map(s=>{const b=Object.values(s.best);return[s.name,s.sid,s.cls,b.length,b.reduce((a,x)=>a+x.stars,0),b.reduce((a,x)=>a+x.score,0),s.quiz,Object.keys(s.wir).length,s.n]})}
+const SH=['ชื่อ','รหัส','ชั้น','ด่านที่ผ่าน','ดาวรวม','คะแนนเกมรวม','แบบฝึกหัดสูงสุด (%)','ภารกิจต่อวงจรที่ผ่าน','จำนวนครั้งที่ทำ'];
+const DH=['วันเวลา','ชื่อ','รหัส','ชั้น','กิจกรรม','รายการ','คะแนน','เต็ม','ดาว','เวลา (วินาที)'];
+function teacher(){const p=prompt('รหัสครู (ค่าเริ่มต้น 1234)');if(p===null)return;if(p!==String(L('ohmPin','1234')))return alert('รหัสไม่ถูกต้อง');
+ const o=modal('<div class="row" style="margin:0"><h2 style="margin:0">👩‍🏫 หลังบ้านครู</h2><button class="btn" id="tx" type="button">✕ ปิด</button></div><div class="row"><select id="tv" style="max-width:190px"><option value="s">สรุปรายคน (คะแนนเก็บ)</option><option value="d">รายละเอียดทุกครั้ง</option></select><select id="tc" style="max-width:130px"><option value="">ทุกชั้น</option>'+CLS.map(c=>'<option>'+c+'</option>').join('')+'</select><input id="tq" placeholder="ค้นหาชื่อ/รหัส" style="max-width:190px"><button class="btn main" id="te" type="button">⬇ Export CSV</button><button class="btn" id="tp" type="button">🔑 เปลี่ยนรหัสครู</button><button class="btn" id="tr" type="button">🗑 ล้างข้อมูล</button></div><div class="tbw card" style="padding:6px"><table class="lt" id="tt"></table></div><details class="ed"><summary>☁ ซิงก์ข้ามเครื่อง (ไม่บังคับ)</summary><p class="mut">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องที่นักเรียนใช้ หากต้องการรวมหลายเครื่อง ให้ใส่ URL ของ Google Apps Script (Web App) ที่รับ POST/GET JSON แล้วกด “ดึงข้อมูล”</p><input id="ty" placeholder="https://script.google.com/macros/s/.../exec"><div class="row"><button class="btn" id="tsv" type="button">บันทึก URL</button><button class="btn" id="tpl" type="button">⬇ ดึงข้อมูลจากเซิร์ฟเวอร์</button></div></details>',false);
+ const rows=()=>{const c=$('tc').value,q=$('tq').value.trim().toLowerCase(),f=r=>(!c||r.cls===c)&&(!q||(r.name+r.sid).toLowerCase().includes(q));
+  if($('tv').value==='s'){const rs=res.filter(f);return{h:SH,r:summary(res).filter(x=>(!c||x[2]===c)&&(!q||(x[0]+x[1]).toLowerCase().includes(q)))}}
+  return{h:DH,r:res.filter(r=>r.type!=='register'&&f(r)).slice().reverse().map(r=>[fd(r.ts),r.name,r.sid,r.cls,TY[r.type]||r.type,r.title,r.score,r.max,r.stars,r.secs])}};
+ const draw=()=>{const d=rows();$('tt').innerHTML='<tr>'+d.h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+(d.r.map(r=>'<tr>'+r.map(x=>'<td>'+E(x)+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+d.h.length+'" class="mut">ยังไม่มีข้อมูล</td></tr>')};
+ $('ty').value=L('ohmSync','');['tv','tc'].forEach(i=>$(i).onchange=draw);$('tq').oninput=draw;draw();
+ $('tx').onclick=()=>o.close();$('te').onclick=()=>{const d=rows();dl('ohm-scores-'+($('tv').value==='s'?'summary':'detail')+'.csv',csv([d.h,...d.r]))};
+ $('tp').onclick=()=>{const n=prompt('รหัสครูใหม่');if(n){S('ohmPin',n);alert('เปลี่ยนรหัสแล้ว')}};
+ $('tr').onclick=()=>{if(confirm('ลบผลคะแนนและรายชื่อทั้งหมดในเครื่องนี้?')){res=[];users=[];S('ohmResults',res);S('ohmUsers',users);draw();lvRender()}};
+ $('tsv').onclick=()=>{S('ohmSync',$('ty').value.trim());alert('บันทึกแล้ว')};
+ $('tpl').onclick=async()=>{const u=$('ty').value.trim();if(!u)return;try{const a=await (await fetch(u)).json();a.forEach(r=>{if(!res.some(x=>x.ts===r.ts&&x.sid===r.sid))res.push(r);if(r.sid&&!users.some(x=>x.sid===r.sid))users.push({name:r.name,sid:r.sid,cls:r.cls,ts:r.ts})});S('ohmResults',res);S('ohmUsers',users);draw();alert('ดึงข้อมูลแล้ว '+a.length+' รายการ')}catch(e){alert('ดึงข้อมูลไม่สำเร็จ ตรวจ URL/สิทธิ์เข้าถึง')}}}
+/* ---- เกมผ่านด่าน (หมวดบทเรียนย่อ) ---- */
+const LV=[
+{type:'mcq',t3:15,t2:30,q:'🎄 ไฟประดับต้นคริสต์มาส: หลอดดวงหนึ่งขาด แล้วไฟดับทั้งสาย เป็นวงจรแบบใด?',o:['อนุกรม','ขนาน'],a:0,ex:'ไฟดับทั้งสาย แสดงว่ากระแสมีทางเดียว → อนุกรม'},
+{type:'mcq',t3:15,t2:30,q:'🔌 ปลั๊กพ่วงที่บ้าน ถอดพัดลมออก แต่ทีวีกับหลอดไฟยังใช้ได้ เป็นวงจรแบบใด?',o:['อนุกรม','ขนาน'],a:1,ex:'แต่ละเครื่องมีทางเดินกระแสของตัวเอง และได้แรงดันเท่ากัน → ขนาน'},
+{type:'calc',t3:40,t2:80,q:'📱 ที่ชาร์จมือถือจ่าย 5 V ผ่านวงจรที่มีความต้านทาน 25 Ω กระแสกี่แอมแปร์?',f:'I = V ÷ R',ans:0.2,u:'A',ex:'I = 5 ÷ 25 = 0.2 A'},
+{type:'calc',t3:40,t2:80,q:'🔦 ไฟฉายหลอด 30 Ω ต้องการกระแส 0.2 A ถ่านต้องให้กี่โวลต์?',f:'V = I × R',ans:6,u:'V',ex:'V = 0.2 × 30 = 6 V'},
+{type:'calc',t3:45,t2:90,q:'🍳 เตาไฟฟ้าจิ๋วต่อ 12 V มีกระแส 0.04 A ความต้านทานกี่โอห์ม?',f:'R = V ÷ I',ans:300,u:'Ω',ex:'R = 12 ÷ 0.04 = 300 Ω'},
+{type:'calc',t3:60,t2:110,q:'🚲 ไฟกระพริบจักรยานต่อตัวต้านทาน 100 Ω กับ 200 Ω แบบอนุกรม กับถ่าน 9 V กระแสกี่แอมแปร์?',f:'R รวม = R₁ + R₂ ; I = V ÷ R',ans:0.03,u:'A',ex:'R รวม = 300 Ω → I = 9 ÷ 300 = 0.03 A'},
+{type:'calc',t3:75,t2:130,q:'💡 หลอดไฟ 20 Ω และ 30 Ω ต่อขนานกับแบตเตอรี่ 12 V กระแสรวมกี่แอมแปร์?',f:'I รวม = I₁ + I₂ (แต่ละสาขา I = V ÷ R)',ans:1,u:'A',ex:'I₁ = 12÷20 = 0.6 A, I₂ = 12÷30 = 0.4 A → รวม 1.0 A'},
+{type:'wire',ch:0,t3:120,t2:240,q:'🔧 ไปห้องฝึก แล้วทำ “ภารกิจต่อวงจร ข้อ 1” ให้ผ่าน (ลากสายหักมุมได้)'},
+{type:'wire',ch:1,t3:150,t2:300,q:'🔧 ไปห้องฝึก แล้วทำ “ภารกิจต่อวงจร ข้อ 2” ให้ผ่าน'}];
+let cur=-1,t0=0,wrong=0;
+const passed=()=>{const m={};if(me)res.forEach(r=>{if(r.type==='game'&&r.sid===me.sid&&(!m[r.title]||r.score>m[r.title].score))m[r.title]={score:r.score,stars:+r.stars}});return m};
+const ttl=i=>'ด่าน '+(i+1);
+function lvRender(msg){const root=$('lvg');if(!root)return;clearInterval(timer);cur=-1;const P=passed();let open=true,tot=0;
+ root.innerHTML='<p class="eb">เกมผ่านด่าน · บทเรียนย่อ ม.3</p><h2>🎮 ผ่านด่านไฟฟ้า</h2><p class="mut">ตอบให้ถูกและเร็ว: ⭐⭐⭐ = ไม่ผิดและทันเวลา · ผลส่งให้ครูอัตโนมัติ'+(me?' · ผู้เล่น: '+E(me.name):'')+'</p>'+(msg||'')+'<div class="lvg">'+LV.map((l,i)=>{const p=P[ttl(i)],ok=open;open=!!p;if(p)tot+=p.stars;return'<button class="lvb" data-i="'+i+'" type="button"'+(ok?'':' disabled')+'>'+(ok?(i+1):'🔒')+'<small>'+(p?'★'.repeat(p.stars)+'☆'.repeat(3-p.stars):'☆☆☆')+'</small></button>'}).join('')+'</div><p class="mut">ดาวสะสม: <b style="color:var(--amber)">'+tot+' / '+LV.length*3+'</b></p><div id="lvq"></div>';
+ root.querySelectorAll('.lvb').forEach(b=>b.onclick=()=>play(+b.dataset.i))}
+function fin(i,sec){const l=LV[i],st=wrong===0&&sec<=l.t3?3:wrong<=1&&sec<=l.t2?2:1,sc=40+st*20;OHMDB.submit('game',ttl(i),sc,100,st,sec);
+ const nx=i+1<LV.length;lvRender('<div class="note ok"><b>✅ ผ่านด่าน '+(i+1)+'!</b> เวลา '+sec+' วินาที · ผิด '+wrong+' ครั้ง · '+sc+' คะแนน<div class="stars" aria-label="'+st+' ดาว">'+[0,1,2].map(k=>'<span class="pop'+(k<st?'':' dim')+'">★</span>').join('')+'</div>'+(l.ex?'<div class="ex">'+l.ex+'</div>':'')+(nx?'<button class="btn main" id="lvn" type="button">ด่านต่อไป →</button>':'<b>🏆 ผ่านครบทุกด่านแล้ว!</b>')+'</div>');if(nx)$('lvn').onclick=()=>play(i+1)}
+function play(i){if(!me)return reg();const l=LV[i];cur=i;t0=Date.now();wrong=0;clearInterval(timer);const q=$('lvq');q.scrollIntoView({block:'nearest',behavior:'smooth'});
+ const body=l.type==='mcq'?'<div class="row">'+l.o.map((o,k)=>'<button class="btn" data-k="'+k+'" type="button" style="flex:1">'+o+'</button>').join('')+'</div>':l.type==='calc'?'<p class="fm">'+l.f+'</p><div class="row"><input id="lva" inputmode="decimal" placeholder="คำตอบ" style="max-width:160px"><b>'+l.u+'</b><button class="btn main" id="lvc" type="button">ตรวจ</button></div>':'<button class="btn main" id="lvw" type="button">ไปต่อวงจร →</button>';
+ q.innerHTML='<div class="card"><div class="row" style="margin:0"><h3 style="margin:0">ด่าน '+(i+1)+'</h3><span class="clock" id="lvt">0 วิ</span><span class="mut">⭐⭐⭐ ≤ '+l.t3+' วิ · ⭐⭐ ≤ '+l.t2+' วิ</span></div><p style="font-size:1.1rem">'+l.q+'</p>'+body+'<div id="lvm" class="mut" role="status"></div></div>';
+ timer=setInterval(()=>{const e=$('lvt');if(e)e.textContent=Math.round((Date.now()-t0)/1000)+' วิ'},500);
+ const bad=m=>{wrong++;$('lvm').innerHTML='❌ '+m+' (ผิด '+wrong+' ครั้ง)'},sec=()=>Math.round((Date.now()-t0)/1000);
+ if(l.type==='mcq')q.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>+b.dataset.k===l.a?fin(i,sec()):(b.disabled=true,bad('ลองใหม่')));
+ else if(l.type==='calc'){const go=()=>{const v=parseFloat($('lva').value.replace(',','.'));if(!isFinite(v))return bad('กรอกตัวเลข');Math.abs(v-l.ans)<=Math.max(Math.abs(l.ans)*.01,.001)?fin(i,sec()):bad('ยังไม่ถูก ตรวจสูตรและหน่วย (A, V, Ω)')};$('lvc').onclick=go;$('lva').onkeydown=e=>{if(e.key==='Enter')go()}}
+ else $('lvw').onclick=()=>{if(!window.startCh)return;window.__lv={i,ch:l.ch};window.switchTab('lab');window.startCh(l.ch)}}
+window.onChBad=()=>{if(window.__lv)wrong++};
+window.onChOk=c=>{const p=window.__lv;if(p&&p.ch===c){window.__lv=null;const s=Math.round((Date.now()-t0)/1000);window.switchTab('learn');fin(p.i,s)}else OHMDB.submit('wiring','ภารกิจต่อวงจร '+(c+1),1,1)};
+const g=document.createElement('div');g.className='card';g.id='lvg';const tl=$('tab-learn');tl.insertBefore(g,tl.firstChild);
+head();lvRender();
+bkAll().then(b=>{let ch=0;(b.ohmUsers||[]).forEach(x=>{if(x&&x.sid&&!users.some(y=>sameId(y.sid,x.sid))){users.push(x);ch=1}});if(ch)S('ohmUsers',users);
+ if(!res.length&&(b.ohmResults||[]).length){res=b.ohmResults;S('ohmResults',res);ch=1}
+ if(!me&&b.ohmMe&&!b.ohmMe.demo&&users.some(y=>sameId(y.sid,b.ohmMe.sid))){me=b.ohmMe;S('ohmMe',me);ch=1;document.querySelectorAll('.ov').forEach(o=>o.remove())}
+ if(ch){head();lvRender()}
+ if(!me&&!document.querySelector('.ov'))reg()});
+})();
+</script>
+
+</body>
+</html>
